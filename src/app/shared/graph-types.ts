@@ -79,16 +79,19 @@ function transactionEdit() {
 }
 
 export class Graph {
-  private model: mxGraphModel;
+  model: mxGraphModel;
 
   vertexes: Vertex[] = [];
   edges: Edge[] = [];
   undoManager: mxUndoManager;
 
-  private root: any;
+  root: any;
 
-  constructor(private readonly graph: mxGraph,
-              private readonly container: HTMLElement) {
+  isMouseDown: boolean = false;
+  lastMousePt: any;
+
+  constructor(readonly graph: mxGraph,
+              readonly container: HTMLElement) {
     this.model = graph.getModel();
 
     this.initialize();
@@ -108,7 +111,59 @@ export class Graph {
       mx.mxEvent.CLICK,
       this.onClick.bind(this));
 
+    this.graph.addMouseListener(
+      {
+        mouseDown: this.onMouseDown.bind(this),
+        mouseMove: this.onMouseMove.bind(this),
+        mouseUp: this.onMouseUp.bind(this),
+      });
+
     this.root = this.graph.getDefaultParent();
+  }
+
+  moveAll(pt: any) {
+    console.log(pt.x + ',' + pt.y + ',' + this.lastMousePt.x + ',' + this.lastMousePt.y);
+
+    this.graph.moveCells(this.graph.getChildCells(this.root, true, true),
+                         pt.x - this.lastMousePt.x,
+                         pt.y - this.lastMousePt.y,
+                         false)
+  }
+
+  getPoint(evt: any) {
+    return new mx.mxPoint(evt.getGraphX(), evt.getGraphY());
+  }
+
+  onMouseDown(sender: any, evt: any): void {
+    if (evt.getCell() && !evt.getCell().isEdge()) {
+      return;
+    }
+
+    if (isInside(this.vertexes[0], evt.getX(), evt.getY())) {
+      this.isMouseDown = true;
+
+      this.lastMousePt = this.getPoint(evt);
+    }
+  }
+
+  onMouseUp(sender: any, evt: any): void {
+    if (this.isMouseDown) {
+      const pt = this.getPoint(evt);
+
+      this.moveAll(pt);
+    }
+    this.isMouseDown = false;
+  }
+
+  onMouseMove(sender: any, evt: any): void {
+    if (!this.isMouseDown)
+      return;
+
+    const pt = this.getPoint(evt);
+
+    this.moveAll(pt);
+
+    this.lastMousePt = pt;
   }
 
   onUndoableEdit(sender: any, evt: any): void {
@@ -131,17 +186,6 @@ export class Graph {
 
   onClick(sender: any, evt: any)
 	{
-    const me = evt.getProperty('event');
-    const pt = mx.mxUtils.convertPoint(this.container,
-									                     mx.mxEvent.getClientX(me),
-                                       mx.mxEvent.getClientY(me));
-    if (isInside(this.vertexes[0], pt.x, pt.y)) {
-      console.log('inside');
-    } else {
-      console.log('outside');
-    }
-
-		evt.consume();
 	};
 
   @transactionEdit()
