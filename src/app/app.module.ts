@@ -4,6 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { EditorComponent } from './editor/editor.component';
 
+import { MXGraphService } from './shared/mxgraph.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -12,7 +14,9 @@ import { EditorComponent } from './editor/editor.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [
+    MXGraphService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
