@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 
-import { MXGraph, MXGraphService } from '../shared/mxgraph.service';
+import { GraphService } from '../shared/graph.service';
+import { Graph } from '../shared/graph-types';
 
 @Component({
   selector: 'app-editor',
@@ -10,13 +11,13 @@ import { MXGraph, MXGraphService } from '../shared/mxgraph.service';
 export class EditorComponent implements OnInit {
   @ViewChild('canvas', {'static': true}) graphCanvas: ElementRef;
 
-  graph: MXGraph;
+  graph: Graph;
 
   constructor(private readonly container: ElementRef,
-              private readonly graphService: MXGraphService) { }
+              private readonly graphService: GraphService) { }
 
   ngOnInit(): void {
-    this.graph = this.graphService.createMXGraph(this.graphCanvas.nativeElement);
+    this.graph = this.graphService.createGraph(this.graphCanvas.nativeElement);
 
     const v1 = this.graph.addVertex(0, 0);
     const v2 = this.graph.addVertex(42, 84);
