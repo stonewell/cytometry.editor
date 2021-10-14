@@ -6,15 +6,17 @@ import { Graph } from '../shared/graph-types';
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.css']
+  styleUrls: ['./editor.component.css'],
 })
 export class EditorComponent implements OnInit {
-  @ViewChild('canvas', {'static': true}) graphCanvas: ElementRef;
+  @ViewChild('canvas', { static: true }) graphCanvas: ElementRef;
 
   graph: Graph;
 
-  constructor(private readonly container: ElementRef,
-              private readonly graphService: GraphService) { }
+  constructor(
+    private readonly container: ElementRef,
+    private readonly graphService: GraphService
+  ) {}
 
   ngOnInit(): void {
     this.graph = this.graphService.createGraph(this.graphCanvas.nativeElement);

@@ -7,16 +7,9 @@ import { EditorComponent } from './editor/editor.component';
 import { GraphService } from './shared/graph.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    EditorComponent
-  ],
-  imports: [
-    BrowserModule
-  ],
-  providers: [
-    GraphService
-  ],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent, EditorComponent],
+  imports: [BrowserModule],
+  providers: [GraphService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

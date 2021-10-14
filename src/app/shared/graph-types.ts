@@ -1,5 +1,13 @@
 import mx from '../shared/mxgraph-loader';
-import { mxConstants, mxStylesheet, mxGraph, mxGraphModel, StyleMap, mxCellTracker, mxUndoManager } from 'mxgraph';
+import {
+  mxConstants,
+  mxStylesheet,
+  mxGraph,
+  mxGraphModel,
+  StyleMap,
+  mxCellTracker,
+  mxUndoManager,
+} from 'mxgraph';
 import { isInside } from './polygon';
 
 const VERTEX_SIZE: number = 5;
@@ -54,7 +62,7 @@ export class Edge {
   removeFromGraph(): void {
     this.g.remove([this]);
 
-    [this.v1, this.v2].forEach(v => v.disconnect(this));
+    [this.v1, this.v2].forEach((v) => v.disconnect(this));
   }
 }
 
@@ -65,15 +73,15 @@ function transactionEdit() {
     descriptor: PropertyDescriptor
   ) {
     const childFunction = descriptor.value;
-    descriptor.value = function(this: any, ...args: any[]) {
+    descriptor.value = function (this: any, ...args: any[]) {
       this.model.beginUpdate();
-      try{
+      try {
         try {
           return childFunction.apply(this, args);
         } finally {
           this.model.endUpdate();
         }
-      } catch(e) {
+      } catch (e) {
         this.undoManager.undo();
         throw e;
       }
@@ -96,8 +104,7 @@ export class Graph {
 
   originPanningTrigger: any;
 
-  constructor(readonly graph: mxGraph,
-              readonly container: HTMLElement) {
+  constructor(readonly graph: mxGraph, readonly container: HTMLElement) {
     this.model = graph.getModel();
 
     this.initialize();
@@ -105,30 +112,29 @@ export class Graph {
 
   initialize() {
     this.undoManager = new mx.mxUndoManager();
-		const listener = this.onUndoableEdit.bind(this);
+    const listener = this.onUndoableEdit.bind(this);
 
     this.graph.getModel().addListener(mx.mxEvent.UNDO, listener);
-		this.graph.getView().addListener(mx.mxEvent.UNDO, listener);
+    this.graph.getView().addListener(mx.mxEvent.UNDO, listener);
 
     this.graph.addListener(
       mx.mxEvent.DOUBLE_CLICK,
-      this.onDoubleClick.bind(this));
-    this.graph.addListener(
-      mx.mxEvent.CLICK,
-      this.onClick.bind(this));
+      this.onDoubleClick.bind(this)
+    );
+    this.graph.addListener(mx.mxEvent.CLICK, this.onClick.bind(this));
 
-    this.graph.addMouseListener(
-      {
-        mouseDown: this.onMouseDown.bind(this),
-        mouseMove: this.onMouseMove.bind(this),
-        mouseUp: this.onMouseUp.bind(this),
-      });
+    this.graph.addMouseListener({
+      mouseDown: this.onMouseDown.bind(this),
+      mouseMove: this.onMouseMove.bind(this),
+      mouseUp: this.onMouseUp.bind(this),
+    });
 
-    this.graph.setBackgroundImage(new mx.mxImage('./assets/img/image.png',
-                                                 900,
-                                                 900));
+    this.graph.setBackgroundImage(
+      new mx.mxImage('./assets/img/image.png', 900, 900)
+    );
     this.originPanningTrigger = this.graph.panningHandler.isPanningTrigger;
-    this.graph.panningHandler.isPanningTrigger = this.isPanningTrigger.bind(this);
+    this.graph.panningHandler.isPanningTrigger =
+      this.isPanningTrigger.bind(this);
 
     mx.mxEvent.addMouseWheelListener(this.onMouseWheel.bind(this));
     this.root = this.graph.getDefaultParent();
@@ -140,25 +146,27 @@ export class Graph {
     }
 
     return true;
-  };
+  }
 
   moveAll(pt: any) {
-    this.graph.moveCells(this.graph.getChildCells(this.root, true, true),
-                         (pt.x - this.lastMousePt.x) / this.graph.view.scale,
-                         (pt.y - this.lastMousePt.y) / this.graph.view.scale,
-                         false)
+    this.graph.moveCells(
+      this.graph.getChildCells(this.root, true, true),
+      (pt.x - this.lastMousePt.x) / this.graph.view.scale,
+      (pt.y - this.lastMousePt.y) / this.graph.view.scale,
+      false
+    );
   }
 
   getPoint(evt: any) {
     return new mx.mxPoint(evt.getGraphX(), evt.getGraphY());
   }
 
-  onMouseWheel(evt: any, up:any) {
-		if (up) {
-			this.graph.zoomIn();
-		} else {
-			this.graph.zoomOut();
-		}
+  onMouseWheel(evt: any, up: any) {
+    if (up) {
+      this.graph.zoomIn();
+    } else {
+      this.graph.zoomOut();
+    }
   }
 
   onMouseDown(sender: any, evt: any): void {
@@ -166,7 +174,7 @@ export class Graph {
       this.isMouseDown = true;
 
       this.lastMousePt = this.getPoint(evt);
-		  evt.consume();
+      evt.consume();
     }
   }
 
@@ -175,55 +183,53 @@ export class Graph {
       const pt = this.getPoint(evt);
 
       this.moveAll(pt);
-		  evt.consume();
+      evt.consume();
     }
     this.isMouseDown = false;
   }
 
   onMouseMove(sender: any, evt: any): void {
-    if (!this.isMouseDown)
-      return;
+    if (!this.isMouseDown) return;
 
     const pt = this.getPoint(evt);
 
     this.moveAll(pt);
 
     this.lastMousePt = pt;
-		evt.consume();
+    evt.consume();
   }
 
   onUndoableEdit(sender: any, evt: any): void {
-		this.undoManager.undoableEditHappened(evt.getProperty('edit'));
+    this.undoManager.undoableEditHappened(evt.getProperty('edit'));
   }
 
-  onDoubleClick(sender: any, evt: any)
-	{
-		const cell = evt.getProperty('cell');
+  onDoubleClick(sender: any, evt: any) {
+    const cell = evt.getProperty('cell');
     const me = evt.getProperty('event');
 
-    const pt = mx.mxUtils.convertPoint(this.container,
-									                     mx.mxEvent.getClientX(me),
-                                       mx.mxEvent.getClientY(me));
+    const pt = mx.mxUtils.convertPoint(
+      this.container,
+      mx.mxEvent.getClientX(me),
+      mx.mxEvent.getClientY(me)
+    );
 
-    const pX = (pt.x / this.graph.view.scale) - this.graph.view.translate.x;
-    const pY = (pt.y / this.graph.view.scale) - this.graph.view.translate.y;
+    const pX = pt.x / this.graph.view.scale - this.graph.view.translate.x;
+    const pY = pt.y / this.graph.view.scale - this.graph.view.translate.y;
 
     if (cell && cell.isEdge()) {
       cell['EDGE'].split(pX, pY);
     }
-		evt.consume();
-	};
+    evt.consume();
+  }
 
-  onClick(sender: any, evt: any)
-	{
-	};
+  onClick(sender: any, evt: any) {}
 
   @transactionEdit()
   remove(cells: any): void {
     this.graph.removeCells(cells.map((c: any) => c.native));
 
-    for(var i=0; i < cells.length; i++) {
-      [this.vertexes, this.edges].forEach(v => {
+    for (var i = 0; i < cells.length; i++) {
+      [this.vertexes, this.edges].forEach((v) => {
         const j = v.indexOf(cells[i]);
 
         if (j >= 0) {
@@ -243,10 +249,14 @@ export class Graph {
 
     v.native = this.graph.insertVertex(
       this.root,
-      '', '',
-      x, y,
-      VERTEX_SIZE, VERTEX_SIZE,
-      'VERTEX;whiteSpace=wrap;html=1;');
+      '',
+      '',
+      x,
+      y,
+      VERTEX_SIZE,
+      VERTEX_SIZE,
+      'VERTEX;whiteSpace=wrap;html=1;'
+    );
 
     v.native['VERTEX'] = v;
     v.g = this;
@@ -265,8 +275,14 @@ export class Graph {
     const e = new Edge();
     e.v1 = v1;
     e.v2 = v2;
-    e.native = this.graph.insertEdge(this.root, null, '',
-                                     v1.native, v2.native, 'EDGE');
+    e.native = this.graph.insertEdge(
+      this.root,
+      null,
+      '',
+      v1.native,
+      v2.native,
+      'EDGE'
+    );
 
     e.native['EDGE'] = e;
     e.g = this;
@@ -280,7 +296,7 @@ export class Graph {
   }
 
   @transactionEdit()
-  splitEdge(x: number, y:number, e: Edge): Vertex {
+  splitEdge(x: number, y: number, e: Edge): Vertex {
     const v1 = e.v1;
     const v2 = e.v2;
 
@@ -301,5 +317,4 @@ export class Graph {
 
     return isInside(this.vertexes[0], evt.getGraphX(), evt.getGraphY());
   }
-
 }
