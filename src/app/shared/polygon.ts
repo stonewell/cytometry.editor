@@ -139,8 +139,9 @@ function checkInside(polygon: any,n: any,p: any)
 }
 
 function vertexToPoint(vertex: any) {
-  return new Point(vertex.native.getGeometry().getCenterX(),
-                   vertex.native.getGeometry().getCenterY());
+  const state = vertex.getState();
+
+  return new Point(state.x, state.y);
 }
 
 function getNextVertex(fromEdge: any, vertex: any) {

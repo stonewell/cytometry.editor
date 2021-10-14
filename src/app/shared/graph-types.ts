@@ -33,6 +33,10 @@ export class Vertex {
       this.e2 = undefined;
     }
   }
+
+  getState() {
+    return this.g.graph.view.getState(this.native);
+  }
 }
 
 export class Edge {
@@ -90,6 +94,8 @@ export class Graph {
   isMouseDown: boolean = false;
   lastMousePt: any;
 
+  originPanningTrigger: any;
+
   constructor(readonly graph: mxGraph,
               readonly container: HTMLElement) {
     this.model = graph.getModel();
@@ -118,15 +124,28 @@ export class Graph {
         mouseUp: this.onMouseUp.bind(this),
       });
 
+    this.graph.setBackgroundImage(new mx.mxImage('./assets/img/image.png',
+                                                 900,
+                                                 900));
+    this.originPanningTrigger = this.graph.panningHandler.isPanningTrigger;
+    this.graph.panningHandler.isPanningTrigger = this.isPanningTrigger.bind(this);
+
+    mx.mxEvent.addMouseWheelListener(this.onMouseWheel.bind(this));
     this.root = this.graph.getDefaultParent();
   }
 
-  moveAll(pt: any) {
-    console.log(pt.x + ',' + pt.y + ',' + this.lastMousePt.x + ',' + this.lastMousePt.y);
+  isPanningTrigger(me: any): boolean {
+    if (this.mouseDownInGraph(me)) {
+      return false;
+    }
 
+    return true;
+  };
+
+  moveAll(pt: any) {
     this.graph.moveCells(this.graph.getChildCells(this.root, true, true),
-                         pt.x - this.lastMousePt.x,
-                         pt.y - this.lastMousePt.y,
+                         (pt.x - this.lastMousePt.x) / this.graph.view.scale,
+                         (pt.y - this.lastMousePt.y) / this.graph.view.scale,
                          false)
   }
 
@@ -134,15 +153,20 @@ export class Graph {
     return new mx.mxPoint(evt.getGraphX(), evt.getGraphY());
   }
 
-  onMouseDown(sender: any, evt: any): void {
-    if (evt.getCell() && !evt.getCell().isEdge()) {
-      return;
-    }
+  onMouseWheel(evt: any, up:any) {
+		if (up) {
+			this.graph.zoomIn();
+		} else {
+			this.graph.zoomOut();
+		}
+  }
 
-    if (isInside(this.vertexes[0], evt.getX(), evt.getY())) {
+  onMouseDown(sender: any, evt: any): void {
+    if (this.mouseDownInGraph(evt)) {
       this.isMouseDown = true;
 
       this.lastMousePt = this.getPoint(evt);
+		  evt.consume();
     }
   }
 
@@ -151,6 +175,7 @@ export class Graph {
       const pt = this.getPoint(evt);
 
       this.moveAll(pt);
+		  evt.consume();
     }
     this.isMouseDown = false;
   }
@@ -164,6 +189,7 @@ export class Graph {
     this.moveAll(pt);
 
     this.lastMousePt = pt;
+		evt.consume();
   }
 
   onUndoableEdit(sender: any, evt: any): void {
@@ -174,12 +200,16 @@ export class Graph {
 	{
 		const cell = evt.getProperty('cell');
     const me = evt.getProperty('event');
+
     const pt = mx.mxUtils.convertPoint(this.container,
 									                     mx.mxEvent.getClientX(me),
                                        mx.mxEvent.getClientY(me));
 
+    const pX = (pt.x / this.graph.view.scale) - this.graph.view.translate.x;
+    const pY = (pt.y / this.graph.view.scale) - this.graph.view.translate.y;
+
     if (cell && cell.isEdge()) {
-      cell['EDGE'].split(pt.x, pt.y);
+      cell['EDGE'].split(pX, pY);
     }
 		evt.consume();
 	};
@@ -263,4 +293,13 @@ export class Graph {
     this.doAddEdge(v, v2);
     return v;
   }
+
+  mouseDownInGraph(evt: any): boolean {
+    if (evt.getCell() && !evt.getCell().isEdge()) {
+      return false;
+    }
+
+    return isInside(this.vertexes[0], evt.getGraphX(), evt.getGraphY());
+  }
+
 }

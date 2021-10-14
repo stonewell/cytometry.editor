@@ -102,6 +102,9 @@ export class GraphService {
     graph.getStylesheet().putCellStyle('EDGE', styleEdge);
 
     graph.setTolerance(20);
+    graph.centerZoom = true;
+		graph.setPanning(true);
+    graph.panningHandler.useLeftButtonForPanning = true;
 
     return new Graph(graph, canvas);
   }
