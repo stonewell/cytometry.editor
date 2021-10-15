@@ -3,3 +3,15 @@
   height: 900px;
   border: solid 1px red;
 }
+
+.outline {
+  position: absolute;
+  overflow: hidden;
+  top: 36px;
+  right: 0px;
+  width: 200px;
+  height: 140px;
+  background: transparent;
+  border-style: solid;
+  border-color: black;
+}

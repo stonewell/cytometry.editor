@@ -7,6 +7,7 @@ import {
   StyleMap,
   mxCellTracker,
   mxUndoManager,
+  mxOutline,
 } from 'mxgraph';
 import { isInside } from './polygon';
 
@@ -104,7 +105,11 @@ export class Graph {
 
   originPanningTrigger: any;
 
-  constructor(readonly graph: mxGraph, readonly container: HTMLElement) {
+  constructor(
+    readonly graph: mxGraph,
+    readonly outline: mxOutline,
+    readonly container: HTMLElement
+  ) {
     this.model = graph.getModel();
 
     this.initialize();

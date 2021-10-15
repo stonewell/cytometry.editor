@@ -8,6 +8,7 @@ import {
   StyleMap,
   mxCellTracker,
   mxUndoManager,
+  mxOutline,
 } from 'mxgraph';
 import { Graph } from './graph-types';
 
@@ -72,7 +73,7 @@ export class GraphService {
     };
   }
 
-  createGraph(canvas: HTMLElement): Graph {
+  createGraph(canvas: HTMLElement, outline: HTMLElement): Graph {
     mx.mxEvent.disableContextMenu(canvas);
 
     const graph: mxGraph = new mx.mxGraph(canvas);
@@ -107,6 +108,10 @@ export class GraphService {
     graph.setPanning(true);
     graph.panningHandler.useLeftButtonForPanning = true;
 
-    return new Graph(graph, canvas);
+    const outl = new mx.mxOutline(graph, outline);
+    outl.updateOnPan = true;
+    outl.sizerImage = new mx.mxImage('./assets/img/image.png', 17, 17);
+
+    return new Graph(graph, outl, canvas);
   }
 }
