@@ -11,16 +11,17 @@ import {
   mxOutline,
 } from 'mxgraph';
 import { isInside } from './polygon';
+import { Vertex, Cell, Graph, transactionEdit } from './graph-types';
 
 const VERTEX_SIZE: number = 5;
 
-export class EditorVertex {
-  native: any;
-
-  g: EditorGraph;
-
+export class EditorVertex extends Vertex {
   e1?: EditorEdge;
   e2?: EditorEdge;
+
+  constructor(readonly native: any, readonly g: EditorGraph) {
+    super(native, g);
+  }
 
   connect(e: EditorEdge) {
     if (!this.e1) {
@@ -43,19 +44,15 @@ export class EditorVertex {
       this.e2 = undefined;
     }
   }
-
-  getState() {
-    return this.g.graph.view.getState(this.native);
-  }
 }
 
-export class EditorEdge {
-  native: any;
-
-  g: EditorGraph;
-
+export class EditorEdge extends Cell {
   v1: EditorVertex;
   v2: EditorVertex;
+
+  constructor(readonly native: any, readonly g: EditorGraph) {
+    super(native, g);
+  }
 
   split(x: number, y: number) {
     this.g.splitEdge(x, y, this);
@@ -68,38 +65,9 @@ export class EditorEdge {
   }
 }
 
-function transactionEdit() {
-  return function (
-    target: Object,
-    key: string | symbol,
-    descriptor: PropertyDescriptor
-  ) {
-    const childFunction = descriptor.value;
-    descriptor.value = function (this: any, ...args: any[]) {
-      this.model.beginUpdate();
-      try {
-        try {
-          return childFunction.apply(this, args);
-        } finally {
-          this.model.endUpdate();
-        }
-      } catch (e) {
-        this.undoManager.undo();
-        throw e;
-      }
-    };
-    return descriptor;
-  };
-}
-
-export class EditorGraph {
-  model: mxGraphModel;
-
+export class EditorGraph extends Graph {
   vertexes: EditorVertex[] = [];
   edges: EditorEdge[] = [];
-  undoManager: mxUndoManager;
-
-  root: any;
 
   isMouseDown: boolean = false;
   lastMousePt: any;
@@ -111,17 +79,11 @@ export class EditorGraph {
     readonly outline: mxOutline,
     readonly container: HTMLElement
   ) {
-    this.model = graph.getModel();
-
-    this.initialize();
+    super(graph, outline, container);
   }
 
   initialize() {
-    this.undoManager = new mx.mxUndoManager();
-    const listener = this.onUndoableEdit.bind(this);
-
-    this.graph.getModel().addListener(mx.mxEvent.UNDO, listener);
-    this.graph.getView().addListener(mx.mxEvent.UNDO, listener);
+    super.initialize();
 
     this.graph.addListener(
       mx.mxEvent.DOUBLE_CLICK,
@@ -143,7 +105,6 @@ export class EditorGraph {
       this.isPanningTrigger.bind(this);
 
     mx.mxEvent.addMouseWheelListener(this.onMouseWheel.bind(this));
-    this.root = this.graph.getDefaultParent();
   }
 
   isPanningTrigger(me: any): boolean {
@@ -205,10 +166,6 @@ export class EditorGraph {
     evt.consume();
   }
 
-  onUndoableEdit(sender: any, evt: any): void {
-    this.undoManager.undoableEditHappened(evt.getProperty('edit'));
-  }
-
   onDoubleClick(sender: any, evt: any) {
     const cell = evt.getProperty('cell');
     const me = evt.getProperty('event');
@@ -251,9 +208,7 @@ export class EditorGraph {
   }
 
   doAddVertex(x: any, y: any): EditorVertex {
-    const v = new EditorVertex();
-
-    v.native = this.graph.insertVertex(
+    const native = this.graph.insertVertex(
       this.root,
       '',
       '',
@@ -264,8 +219,8 @@ export class EditorGraph {
       'VERTEX;whiteSpace=wrap;html=1;'
     );
 
+    const v = new EditorVertex(native, this);
     v.native['VERTEX'] = v;
-    v.g = this;
 
     this.vertexes.push(v);
 
@@ -278,10 +233,7 @@ export class EditorGraph {
   }
 
   doAddEdge(v1: EditorVertex, v2: EditorVertex): EditorEdge {
-    const e = new EditorEdge();
-    e.v1 = v1;
-    e.v2 = v2;
-    e.native = this.graph.insertEdge(
+    const native = this.graph.insertEdge(
       this.root,
       null,
       '',
@@ -290,8 +242,11 @@ export class EditorGraph {
       'EDGE'
     );
 
+    const e = new EditorEdge(native, this);
+    e.v1 = v1;
+    e.v2 = v2;
+
     e.native['EDGE'] = e;
-    e.g = this;
 
     v1.connect(e);
     v2.connect(e);
