@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 
 import { GraphService } from '../shared/graph.service';
-import { Graph } from '../shared/graph-types';
+import { EditorGraph } from '../shared/editor-graph-types';
 
 @Component({
   selector: 'app-editor',
@@ -12,7 +12,7 @@ export class EditorComponent implements OnInit {
   @ViewChild('canvas', { static: true }) graphCanvas: ElementRef;
   @ViewChild('outline', { static: true }) graphOutline: ElementRef;
 
-  graph: Graph;
+  graph: EditorGraph;
 
   constructor(
     private readonly container: ElementRef,
@@ -20,7 +20,7 @@ export class EditorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.graph = this.graphService.createGraph(
+    this.graph = this.graphService.createEditorGraph(
       this.graphCanvas.nativeElement,
       this.graphOutline.nativeElement
     );

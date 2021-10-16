@@ -1,4 +1,5 @@
 import mx from '../shared/mxgraph-loader';
+
 import {
   mxConstants,
   mxStylesheet,
@@ -13,15 +14,15 @@ import { isInside } from './polygon';
 
 const VERTEX_SIZE: number = 5;
 
-export class Vertex {
+export class EditorVertex {
   native: any;
 
-  g: Graph;
+  g: EditorGraph;
 
-  e1?: Edge;
-  e2?: Edge;
+  e1?: EditorEdge;
+  e2?: EditorEdge;
 
-  connect(e: Edge) {
+  connect(e: EditorEdge) {
     if (!this.e1) {
       this.e1 = e;
     } else if (!this.e2) {
@@ -35,7 +36,7 @@ export class Vertex {
     return !!this.e1 && !!this.e2;
   }
 
-  disconnect(e: Edge): void {
+  disconnect(e: EditorEdge): void {
     if (this.e1 === e) {
       this.e1 = undefined;
     } else if (this.e2 === e) {
@@ -48,13 +49,13 @@ export class Vertex {
   }
 }
 
-export class Edge {
+export class EditorEdge {
   native: any;
 
-  g: Graph;
+  g: EditorGraph;
 
-  v1: Vertex;
-  v2: Vertex;
+  v1: EditorVertex;
+  v2: EditorVertex;
 
   split(x: number, y: number) {
     this.g.splitEdge(x, y, this);
@@ -91,11 +92,11 @@ function transactionEdit() {
   };
 }
 
-export class Graph {
+export class EditorGraph {
   model: mxGraphModel;
 
-  vertexes: Vertex[] = [];
-  edges: Edge[] = [];
+  vertexes: EditorVertex[] = [];
+  edges: EditorEdge[] = [];
   undoManager: mxUndoManager;
 
   root: any;
@@ -245,12 +246,12 @@ export class Graph {
   }
 
   @transactionEdit()
-  addVertex(x: any, y: any): Vertex {
+  addVertex(x: any, y: any): EditorVertex {
     return this.doAddVertex(x, y);
   }
 
-  doAddVertex(x: any, y: any): Vertex {
-    const v = new Vertex();
+  doAddVertex(x: any, y: any): EditorVertex {
+    const v = new EditorVertex();
 
     v.native = this.graph.insertVertex(
       this.root,
@@ -272,12 +273,12 @@ export class Graph {
   }
 
   @transactionEdit()
-  addEdge(v1: Vertex, v2: Vertex): Edge {
+  addEdge(v1: EditorVertex, v2: EditorVertex): EditorEdge {
     return this.doAddEdge(v1, v2);
   }
 
-  doAddEdge(v1: Vertex, v2: Vertex): Edge {
-    const e = new Edge();
+  doAddEdge(v1: EditorVertex, v2: EditorVertex): EditorEdge {
+    const e = new EditorEdge();
     e.v1 = v1;
     e.v2 = v2;
     e.native = this.graph.insertEdge(
@@ -301,7 +302,7 @@ export class Graph {
   }
 
   @transactionEdit()
-  splitEdge(x: number, y: number, e: Edge): Vertex {
+  splitEdge(x: number, y: number, e: EditorEdge): EditorVertex {
     const v1 = e.v1;
     const v2 = e.v2;
 

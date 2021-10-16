@@ -10,7 +10,7 @@ import {
   mxUndoManager,
   mxOutline,
 } from 'mxgraph';
-import { Graph } from './graph-types';
+import { EditorGraph } from './editor-graph-types';
 
 @Injectable({
   providedIn: 'root',
@@ -73,7 +73,7 @@ export class GraphService {
     };
   }
 
-  createGraph(canvas: HTMLElement, outline: HTMLElement): Graph {
+  createEditorGraph(canvas: HTMLElement, outline: HTMLElement): EditorGraph {
     mx.mxEvent.disableContextMenu(canvas);
 
     const graph: mxGraph = new mx.mxGraph(canvas);
@@ -112,6 +112,6 @@ export class GraphService {
     outl.updateOnPan = true;
     outl.sizerImage = new mx.mxImage('./assets/img/image.png', 17, 17);
 
-    return new Graph(graph, outl, canvas);
+    return new EditorGraph(graph, outl, canvas);
   }
 }
