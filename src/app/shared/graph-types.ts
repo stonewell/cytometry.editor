@@ -56,11 +56,7 @@ export class Graph {
 
   root: any;
 
-  constructor(
-    readonly graph: mxGraph,
-    readonly outline: mxOutline,
-    readonly container: HTMLElement
-  ) {
+  constructor(readonly graph: mxGraph, readonly container: HTMLElement) {
     this.model = graph.getModel();
 
     this.initialize();

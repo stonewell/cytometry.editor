@@ -79,7 +79,7 @@ export class EditorGraph extends Graph {
     readonly outline: mxOutline,
     readonly container: HTMLElement
   ) {
-    super(graph, outline, container);
+    super(graph, container);
   }
 
   initialize() {

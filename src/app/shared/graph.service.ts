@@ -11,6 +11,7 @@ import {
   mxOutline,
 } from 'mxgraph';
 import { EditorGraph } from './editor-graph-types';
+import { GateGraph } from './gate-graph-types';
 
 @Injectable({
   providedIn: 'root',
@@ -110,8 +111,101 @@ export class GraphService {
 
     const outl = new mx.mxOutline(graph, outline);
     outl.updateOnPan = true;
-    outl.sizerImage = new mx.mxImage('./assets/img/image.png', 17, 17);
 
     return new EditorGraph(graph, outl, canvas);
+  }
+
+  createGateGraph(canvas: HTMLElement): GateGraph {
+    mx.mxEvent.disableContextMenu(canvas);
+
+    const graph: mxGraph = new mx.mxGraph(canvas);
+
+    //edge can not be disconnected
+    graph.setAllowDanglingEdges(false);
+    graph.setDisconnectOnMove(false);
+    graph.setCellsMovable(false);
+    graph.setAutoSizeCells(true);
+
+    //edge can not be selected
+    graph.isCellSelectable = function (cell) {
+      return !cell.isEdge();
+    };
+
+    // Disables tooltips on touch devices
+    graph.setTooltips(!mx.mxClient.IS_TOUCH);
+
+    mx.mxConstants.VERTEX_SELECTION_STROKEWIDTH = 0.1;
+
+    // Set some stylesheet options for the visual appearance of vertices
+    let style = graph.getStylesheet().getDefaultVertexStyle();
+    style[mx.mxConstants.STYLE_SHAPE] = 'label';
+
+    style[mx.mxConstants.STYLE_VERTICAL_ALIGN] = mx.mxConstants.ALIGN_MIDDLE;
+    style[mx.mxConstants.STYLE_ALIGN] = mx.mxConstants.ALIGN_LEFT;
+    style[mx.mxConstants.STYLE_SPACING_LEFT] = 4;
+
+    style[mx.mxConstants.STYLE_RESIZABLE] = '0';
+
+    style[mx.mxConstants.STYLE_GRADIENTCOLOR] = '#7d85df';
+    style[mx.mxConstants.STYLE_STROKECOLOR] = '#5d65df';
+    style[mx.mxConstants.STYLE_FILLCOLOR] = '#adc5ff';
+
+    style[mx.mxConstants.STYLE_FONTCOLOR] = '#1d258f';
+    style[mx.mxConstants.STYLE_FONTFAMILY] = 'Verdana';
+    style[mx.mxConstants.STYLE_FONTSIZE] = '12';
+    style[mx.mxConstants.STYLE_FONTSTYLE] = '1';
+
+    style[mx.mxConstants.STYLE_SHADOW] = '1';
+    style[mx.mxConstants.STYLE_ROUNDED] = '1';
+    style[mx.mxConstants.STYLE_GLASS] = '1';
+
+    // Sets the default style for edges
+    style = graph.getStylesheet().getDefaultEdgeStyle();
+    style[mx.mxConstants.STYLE_ROUNDED] = true;
+    style[mx.mxConstants.STYLE_STROKEWIDTH] = 3;
+    style[mx.mxConstants.STYLE_EXIT_X] = 1.0; // center
+    style[mx.mxConstants.STYLE_EXIT_Y] = 0.5; // bottom
+    style[mx.mxConstants.STYLE_EXIT_PERIMETER] = 0; // disabled
+    style[mx.mxConstants.STYLE_ENTRY_X] = 0; // center
+    style[mx.mxConstants.STYLE_ENTRY_Y] = 0.5; // top
+    style[mx.mxConstants.STYLE_ENTRY_PERIMETER] = 0; // disabled
+
+    // Disable the following for straight lines
+    style[mx.mxConstants.STYLE_EDGE] = mx.mxEdgeStyle.SideToSide;
+
+    // Stops editing on enter or escape keypress
+    const keyHandler = new mx.mxKeyHandler(graph);
+
+    // Enables automatic layout on the graph and installs
+    // a tree layout for all groups who's children are
+    // being changed, added or removed.
+    const layout = new mx.mxCompactTreeLayout(graph, true, false);
+    layout.useBoundingBox = false;
+    layout.edgeRouting = false;
+    layout.levelDistance = 60;
+    layout.nodeDistance = 16;
+
+    // Allows the layout to move cells even though cells
+    // aren't movable in the graph
+    layout.isVertexMovable = function (cell) {
+      return true;
+    };
+
+    const layoutMgr = new mx.mxLayoutManager(graph);
+
+    layoutMgr.getLayout = function (cell, evt) {
+      if (cell.getChildCount() > 0) {
+        return layout;
+      }
+
+      return null;
+    };
+
+    graph.setTolerance(20);
+    graph.centerZoom = true;
+    graph.setPanning(true);
+    graph.panningHandler.useLeftButtonForPanning = true;
+
+    return new GateGraph(graph, canvas);
   }
 }
