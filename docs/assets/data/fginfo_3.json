@@ -1,0 +1,96 @@
+{
+  "byteOrder": "lsbf",
+  "dataType": "float",
+  "numberFormat": "binary",
+  "path": "../../data/3.fcs",
+  "versionNumber": "FCS3.1",
+  "numberOfEventsInFile": 36582,
+  "numberOfParameters": 17,
+  "parameters": {
+    "FSC-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "FSC-H": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "FSC-W": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "SSC-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "SSC-H": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "SSC-W": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "FITC-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "PE-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "PerCP-Cy5-5-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "PE-Cy7-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "APC-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "APC-R700-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "APC-H7-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "BV421-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "BV510-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "BV605-A": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "262144"
+    },
+    "Time": {
+      "longName": "",
+      "minimum": "0",
+      "maximum": "2.62144e+07"
+    }
+  }
+}
