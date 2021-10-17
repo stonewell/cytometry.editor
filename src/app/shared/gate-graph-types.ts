@@ -53,7 +53,9 @@ export class GateGraph extends Graph {
                                                this.onSelectionChange.bind(this));
 
     this.graph.addMouseListener({
+      mouseDown: this.onMouseDown.bind(this),
       mouseMove: this.onMouseMove.bind(this),
+      mouseUp: this.onMouseUp.bind(this),
     });
   }
 
@@ -61,6 +63,12 @@ export class GateGraph extends Graph {
     const result = this.oldGetPreferredSizeForCell.apply(this.graph, arguments);
 
     return result;
+  }
+
+  onMouseDown(sender: any, evt: any): void {
+  }
+
+  onMouseUp(sender: any, evt: any): void {
   }
 
   onMouseMove(sender: any, evt: any): void {

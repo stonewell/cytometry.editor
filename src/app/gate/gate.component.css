@@ -1,0 +1,23 @@
+.gate {
+  display: grid;
+  grid-template-columns: auto 1fr
+}
+
+.gate > * {
+  margin-top: 8px;
+  margin-left: 4px;
+}
+
+.gate > span {
+  text-align: right;
+}
+
+.gate > div {
+  grid-column: 2/2;
+
+  display: inline-block;
+}
+
+.gate > div > button {
+  float: right;
+}

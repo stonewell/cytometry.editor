@@ -1,0 +1,9 @@
+.flowgate {
+  display: flex;
+  flex-direction: column;
+}
+
+.flowgate-detail {
+  display: flex;
+  flex-direction: row;
+}
