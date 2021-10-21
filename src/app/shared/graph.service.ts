@@ -12,12 +12,15 @@ import {
 } from 'mxgraph';
 import { EditorGraph } from './editor-graph-types';
 import { GateGraph } from './gate-graph-types';
+import { GateService } from './gate.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GraphService {
-  constructor() {
+  constructor(
+    private readonly gateService: GateService
+) {
     this.initialize();
   }
 
@@ -206,6 +209,6 @@ export class GraphService {
     graph.setPanning(true);
     graph.panningHandler.useLeftButtonForPanning = true;
 
-    return new GateGraph(graph, canvas);
+    return new GateGraph(graph, canvas, this.gateService);
   }
 }

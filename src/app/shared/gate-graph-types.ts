@@ -14,13 +14,19 @@ import {
 import { isInside } from './polygon';
 import { Vertex, Cell, Graph, transactionEdit } from './graph-types';
 
+import { GateService } from '../shared/gate.service';
+import { Gate } from '../shared/gate-types';
+
 export class GateGraph extends Graph {
   oldGetPreferredSizeForCell: any;
   highlight: any;
 
   mouseOverCell: any;
 
-  constructor(readonly graph: mxGraph, readonly container: HTMLElement) {
+  constructor(readonly graph: mxGraph,
+              readonly container: HTMLElement,
+              private readonly gateService: GateService
+             ) {
     super(graph, container);
   }
 
@@ -149,34 +155,10 @@ export class GateGraph extends Graph {
 
   @transactionEdit()
   addChild(cell: any) {
-    const vertex = this.graph.insertVertex(
-      this.root,
-      null,
-      'New Gate',
-      0,
-      0,
-      0,
-      0
-    );
-    const geometry = this.model.getGeometry(vertex);
+    const gate = this.gateService.addGate(cell['gate']);
 
-    // Updates the geometry of the vertex with the
-    // preferred size computed in the graph
-    const size = this.graph.getPreferredSizeForCell(vertex);
-    geometry.width = size.width;
-    geometry.height = size.height;
-
-    // Adds the edge between the existing cell
-    // and the new vertex and executes the
-    // automatic layout on the parent
-    const edge = this.graph.insertEdge(this.root, null, '', cell, vertex);
-
-    // Configures the edge label "in-place" to reside
-    // at the end of the edge (x = 1) and with an offset
-    // of 20 pixels in negative, vertical direction.
-    edge.geometry.x = 1;
-    edge.geometry.y = 0;
-    edge.geometry.offset = new mx.mxPoint(0, -20);
+    const vertex = this.addGateVertex(gate,
+                                      cell);
 
     this.selectCell(vertex);
 
@@ -238,18 +220,58 @@ export class GateGraph extends Graph {
 
   @transactionEdit()
   addRoot() {
-    const root = this.graph.insertVertex(
-      this.root,
-      'treeRoot',
-      'New Gate',
-      5,
-      5,
-      40,
-      20
-    );
-    this.graph.updateCellSize(root);
-
+    const root = this.addGateToGraph(this.gateService.getRootGate(),
+                                     null);
     this.selectCell(root);
+  }
+
+  addGateToGraph(gate: Gate, parentVertex: any): any {
+    //add gate it self
+    const v= this.addGateVertex(gate,
+                                parentVertex,
+                                parentVertex ? '' : 'treeRoot');
+
+    for (const c of gate.children) {
+      this.addGateToGraph(c, v);
+    }
+  }
+
+  addGateVertex(gate: Gate, parentVertex: any, vertexId: string = ''): any {
+    const v = this.graph.insertVertex(
+      this.root,
+      vertexId,
+      gate.name,
+      0,
+      0,
+      0,
+      0
+    );
+
+    const geometry = this.model.getGeometry(v);
+
+    // Updates the geometry of the vertex with the
+    // preferred size computed in the graph
+    const size = this.graph.getPreferredSizeForCell(v);
+    geometry.width = size.width;
+    geometry.height = size.height;
+
+    // Adds the edge between the existing cell
+    // and the new vertex and executes the
+    // automatic layout on the parent
+    if (parentVertex) {
+      const edge = this.graph.insertEdge(this.root, null, '', parentVertex, v);
+
+      // Configures the edge label "in-place" to reside
+      // at the end of the edge (x = 1) and with an offset
+      // of 20 pixels in negative, vertical direction.
+      edge.geometry.x = 1;
+      edge.geometry.y = 0;
+      edge.geometry.offset = new mx.mxPoint(0, -20);
+    }
+
+    v['gate'] = gate;
+
+    return v;
   }
 
   selectCell(cell: any) {
@@ -258,8 +280,6 @@ export class GateGraph extends Graph {
 
   onSelectionChange(sender: any, evt: any)
   {
-    this.graph.clearCellOverlays(this.root);
-
     const cells = this.graph.getSelectionCells();
 
     if (cells) {
@@ -267,6 +287,7 @@ export class GateGraph extends Graph {
       {
         if (cells[i]) {
           this.highlight.highlight(this.graph.view.getState(cells[i], true));
+          this.gateService.setCurrentGate(cells[i]['gate']);
         }
       }
     }
