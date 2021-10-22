@@ -47,6 +47,8 @@ export class GateService {
     }
 
     child.parent = parent as Gate;
+    parent.children.push(child);
+
     return child;
   }
 
@@ -55,6 +57,12 @@ export class GateService {
    */
   removeGate(gate: Gate): Gate {
     const parent: Gate = gate.parent;
+
+    const i = parent.children.indexOf(gate);
+
+    if (i >= 0) {
+      parent.children.splice(i, 1);
+    }
 
     return parent;
   }

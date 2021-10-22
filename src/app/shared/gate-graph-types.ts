@@ -23,6 +23,8 @@ export class GateGraph extends Graph {
 
   mouseOverCell: any;
 
+  rootGateVertex: any;
+
   constructor(readonly graph: mxGraph,
               readonly container: HTMLElement,
               private readonly gateService: GateService
@@ -167,6 +169,8 @@ export class GateGraph extends Graph {
 
   @transactionEdit()
   deleteSubtree(cell: any) {
+    const pGate = this.gateService.removeGate(cell['gate']);
+
     // Gets the subtree from cell downwards
     var cells: any[] = [];
     this.graph.traverse(cell, true, function (vertex: any) {
@@ -176,6 +180,20 @@ export class GateGraph extends Graph {
     });
 
     this.graph.removeCells(cells);
+
+    var pVertex: any = null;
+    this.graph.traverse(this.rootGateVertex, true, function (vertex: any) {
+      if (vertex['gate'] === pGate) {
+        pVertex = vertex;
+        return false;
+      }
+
+      return true;
+    });
+
+    if (pVertex) {
+      this.selectCell(pVertex);
+    }
   }
 
   addOverlays(cell: any, addDeleteIcon: any) {
@@ -220,9 +238,13 @@ export class GateGraph extends Graph {
 
   @transactionEdit()
   addRoot() {
-    const root = this.addGateToGraph(this.gateService.getRootGate(),
+    this.rootGateVertex = this.addGateToGraph(this.gateService.getRootGate(),
                                      null);
-    this.selectCell(root);
+
+    this.rootGateVertex.geometry.x = 10;
+    this.rootGateVertex.geometry.y = 10;
+
+    this.selectCell(this.rootGateVertex);
   }
 
   addGateToGraph(gate: Gate, parentVertex: any): any {
@@ -234,6 +256,8 @@ export class GateGraph extends Graph {
     for (const c of gate.children) {
       this.addGateToGraph(c, v);
     }
+
+    return v;
   }
 
   addGateVertex(gate: Gate, parentVertex: any, vertexId: string = ''): any {
