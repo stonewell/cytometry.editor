@@ -18,9 +18,7 @@ import { GateService } from './gate.service';
   providedIn: 'root',
 })
 export class GraphService {
-  constructor(
-    private readonly gateService: GateService
-) {
+  constructor(private readonly gateService: GateService) {
     this.initialize();
   }
 
@@ -209,6 +207,6 @@ export class GraphService {
     graph.setPanning(true);
     graph.panningHandler.useLeftButtonForPanning = true;
 
-    return new GateGraph(graph, canvas, this.gateService);
+    return new GateGraph(graph, canvas, this.gateService, layout);
   }
 }

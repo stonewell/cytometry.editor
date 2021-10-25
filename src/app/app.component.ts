@@ -9,9 +9,7 @@ import { GateService } from './shared/gate.service';
 export class AppComponent implements OnInit {
   title = 'editor';
 
-  constructor(
-    private readonly gateService: GateService
-  ) {}
+  constructor(private readonly gateService: GateService) {}
 
   ngOnInit(): void {
     this.gateService.loadGate('');

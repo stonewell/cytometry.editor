@@ -14,15 +14,8 @@ import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, EditorComponent, GatesComponent, GateComponent],
-  imports: [
-    FormsModule,
-    BrowserModule,
-    HttpClientModule
-  ],
-  providers: [
-    GraphService,
-    GateService,
-  ],
+  imports: [FormsModule, BrowserModule, HttpClientModule],
+  providers: [GraphService, GateService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

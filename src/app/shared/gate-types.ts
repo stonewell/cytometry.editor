@@ -5,7 +5,8 @@ export interface Point {
 
 export interface Gate {
   name: string;
-  x: string
+  customName: boolean;
+  x: string;
   y: string;
   points: Point[];
   children: Gate[];

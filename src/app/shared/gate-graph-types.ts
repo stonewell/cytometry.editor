@@ -25,10 +25,12 @@ export class GateGraph extends Graph {
 
   rootGateVertex: any;
 
-  constructor(readonly graph: mxGraph,
-              readonly container: HTMLElement,
-              private readonly gateService: GateService
-             ) {
+  constructor(
+    readonly graph: mxGraph,
+    readonly container: HTMLElement,
+    private readonly gateService: GateService,
+    readonly layout: any
+  ) {
     super(graph, container);
   }
 
@@ -57,8 +59,9 @@ export class GateGraph extends Graph {
 
     this.highlight = new mx.mxCellHighlight(this.graph, '#00ff00', 2);
 
-    this.graph.getSelectionModel().addListener(mx.mxEvent.CHANGE,
-                                               this.onSelectionChange.bind(this));
+    this.graph
+      .getSelectionModel()
+      .addListener(mx.mxEvent.CHANGE, this.onSelectionChange.bind(this));
 
     this.graph.addMouseListener({
       mouseDown: this.onMouseDown.bind(this),
@@ -73,17 +76,14 @@ export class GateGraph extends Graph {
     return result;
   }
 
-  onMouseDown(sender: any, evt: any): void {
-  }
+  onMouseDown(sender: any, evt: any): void {}
 
-  onMouseUp(sender: any, evt: any): void {
-  }
+  onMouseUp(sender: any, evt: any): void {}
 
   onMouseMove(sender: any, evt: any): void {
     const cell = evt.getCell();
 
     if (this.mouseOverCell !== cell) {
-
       if (this.mouseOverCell) {
         this.graph.removeCellOverlays(this.mouseOverCell);
       }
@@ -96,8 +96,10 @@ export class GateGraph extends Graph {
       this.mouseOverCell = cell;
 
       if (this.mouseOverCell) {
-        this.addOverlays(this.mouseOverCell,
-                         this.mouseOverCell.id !== 'treeRoot');
+        this.addOverlays(
+          this.mouseOverCell,
+          this.mouseOverCell.id !== 'treeRoot'
+        );
       }
     }
 
@@ -159,8 +161,7 @@ export class GateGraph extends Graph {
   addChild(cell: any) {
     const gate = this.gateService.addGate(cell['gate']);
 
-    const vertex = this.addGateVertex(gate,
-                                      cell);
+    const vertex = this.addGateVertex(gate, cell);
 
     this.selectCell(vertex);
 
@@ -238,8 +239,10 @@ export class GateGraph extends Graph {
 
   @transactionEdit()
   addRoot() {
-    this.rootGateVertex = this.addGateToGraph(this.gateService.getRootGate(),
-                                     null);
+    this.rootGateVertex = this.addGateToGraph(
+      this.gateService.getRootGate(),
+      null
+    );
 
     this.rootGateVertex.geometry.x = 10;
     this.rootGateVertex.geometry.y = 10;
@@ -249,15 +252,27 @@ export class GateGraph extends Graph {
 
   addGateToGraph(gate: Gate, parentVertex: any): any {
     //add gate it self
-    const v= this.addGateVertex(gate,
-                                parentVertex,
-                                parentVertex ? '' : 'treeRoot');
+    const v = this.addGateVertex(
+      gate,
+      parentVertex,
+      parentVertex ? '' : 'treeRoot'
+    );
 
     for (const c of gate.children) {
       this.addGateToGraph(c, v);
     }
 
     return v;
+  }
+
+  updateVertexSize(v: any): void {
+    const geometry = this.model.getGeometry(v);
+
+    // Updates the geometry of the vertex with the
+    // preferred size computed in the graph
+    const size = this.graph.getPreferredSizeForCell(v);
+    geometry.width = size.width;
+    geometry.height = size.height;
   }
 
   addGateVertex(gate: Gate, parentVertex: any, vertexId: string = ''): any {
@@ -271,13 +286,7 @@ export class GateGraph extends Graph {
       0
     );
 
-    const geometry = this.model.getGeometry(v);
-
-    // Updates the geometry of the vertex with the
-    // preferred size computed in the graph
-    const size = this.graph.getPreferredSizeForCell(v);
-    geometry.width = size.width;
-    geometry.height = size.height;
+    this.updateVertexSize(v);
 
     // Adds the edge between the existing cell
     // and the new vertex and executes the
@@ -302,16 +311,29 @@ export class GateGraph extends Graph {
     this.graph.setSelectionCell(cell);
   }
 
-  onSelectionChange(sender: any, evt: any)
-  {
+  onSelectionChange(sender: any, evt: any) {
     const cells = this.graph.getSelectionCells();
 
     if (cells) {
-      for (var i = 0; i < cells.length; i++)
-      {
+      for (var i = 0; i < cells.length; i++) {
         if (cells[i]) {
           this.highlight.highlight(this.graph.view.getState(cells[i], true));
           this.gateService.setCurrentGate(cells[i]['gate']);
+        }
+      }
+    }
+  }
+
+  @transactionEdit()
+  updateCurrentGateLabel(): void {
+    const cells = this.graph.getSelectionCells();
+
+    if (cells) {
+      for (var i = 0; i < cells.length; i++) {
+        if (cells[i]) {
+          this.model.setValue(cells[i], cells[i]['gate'].name);
+          this.updateVertexSize(cells[i]);
+          this.layout.execute(this.root);
         }
       }
     }

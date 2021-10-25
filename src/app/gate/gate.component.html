@@ -1,16 +1,20 @@
 <p>gate works!</p>
 <div class="gate">
-     <span>Name:</span>
-     <input type="input" [(ngModel)]="gateName"/>
-     <span>X axis:</span>
-     <select [(ngModel)]="xParameter">
-       <option *ngFor="let param of gateParameters" [ngValue]="param">{{param}}</option>
-     </select>
-     <span>Y axis:</span>
-     <select [(ngModel)]="yParameter">
-       <option *ngFor="let param of gateParameters" [ngValue]="param">{{param}}</option>
-     </select>
-     <div>
-       <button type="button" (click)="onUpdate()">Update</button>
-     </div>
+  <span>Name:</span>
+  <input type="input" [(ngModel)]="gateName"
+         (input)="onNameUpdate()"/>
+  <span>X axis:</span>
+  <select [(ngModel)]="xParameter"
+          (change)="onUIUpdate()">
+    <option *ngFor="let param of gateParameters" [ngValue]="param">
+      {{ param }}
+    </option>
+  </select>
+  <span>Y axis:</span>
+  <select [(ngModel)]="yParameter"
+          (change)="onUIUpdate()">
+    <option *ngFor="let param of gateParameters" [ngValue]="param">
+      {{ param }}
+    </option>
+  </select>
 </div>

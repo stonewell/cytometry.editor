@@ -8,9 +8,8 @@ describe('GateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GateComponent ]
-    })
-    .compileComponents();
+      declarations: [GateComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
