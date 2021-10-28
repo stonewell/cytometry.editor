@@ -1,7 +1,6 @@
 .canvas {
-  width: 900px;
-  height: 900px;
-  border: solid 1px red;
+  width: 600px;
+  height: 600px;
 }
 
 .outline {
@@ -9,8 +8,8 @@
   overflow: hidden;
   top: 36px;
   right: 0px;
-  width: 200px;
-  height: 140px;
+  width: 0px;
+  height: 0px;
   background: transparent;
   border-style: solid;
   border-color: black;

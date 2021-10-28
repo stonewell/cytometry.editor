@@ -1,9 +1,29 @@
-.flowgate {
-  display: flex;
-  flex-direction: column;
+.gates {
+  position: absolute;
+  overflow: auto;
+  top: 8px;
+  right: 0px;
+  width: 100%;
+  height: 250px;
+  broder: solid 3px green;
 }
 
-.flowgate-detail {
-  display: flex;
-  flex-direction: row;
+.gate {
+  position: absolute;
+  overflow: auto;
+  top: 266px;
+  left: 650px;
+  width: fit-content;
+  height: fit-content;
+  broder: solid 3px pink;
+}
+
+.editor {
+  position: absolute;
+  overflow: auto;
+  top: 266px;
+  left: 10px;
+  width: fit-content;
+  height: fit-content;
+  broder: solid 3px cyan;
 }
