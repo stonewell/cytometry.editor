@@ -3,6 +3,8 @@ import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { GraphService } from '../shared/graph.service';
 import { EditorGraph } from '../shared/editor-graph-types';
 
+import { FlowgateService } from '../shared/flowgate.service';
+
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
@@ -15,7 +17,8 @@ export class EditorComponent implements OnInit {
 
   constructor(
     private readonly container: ElementRef,
-    private readonly graphService: GraphService
+    private readonly graphService: GraphService,
+    private readonly flowgateService: FlowgateService
   ) {}
 
   ngOnInit(): void {
@@ -31,5 +34,7 @@ export class EditorComponent implements OnInit {
     this.graph.addEdge(v2, v3);
     this.graph.addEdge(v3, v4);
     this.graph.addEdge(v1, v4);
+
+    this.flowgateService.getFileInfo('');
   }
 }

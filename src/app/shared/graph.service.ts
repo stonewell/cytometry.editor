@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import mx from '../shared/mxgraph-loader';
 import {
   mxConstants,
@@ -9,6 +10,7 @@ import {
   mxCellTracker,
   mxUndoManager,
 } from 'mxgraph';
+
 import { EditorGraph } from './editor-graph-types';
 import { GateGraph } from './gate-graph-types';
 import { GateService } from './gate.service';
