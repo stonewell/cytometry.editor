@@ -10,7 +10,6 @@ import { EditorGraph } from '../shared/editor-graph-types';
 })
 export class EditorComponent implements OnInit {
   @ViewChild('canvas', { static: true }) graphCanvas: ElementRef;
-  @ViewChild('outline', { static: true }) graphOutline: ElementRef;
 
   graph: EditorGraph;
 
@@ -21,8 +20,7 @@ export class EditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.graph = this.graphService.createEditorGraph(
-      this.graphCanvas.nativeElement,
-      this.graphOutline.nativeElement
+      this.graphCanvas.nativeElement
     );
 
     const v1 = this.graph.addVertex(126, 126);

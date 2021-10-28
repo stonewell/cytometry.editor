@@ -1,3 +1,7 @@
+import mx from '../shared/mxgraph-loader';
+
+import { mxRectangle } from 'mxgraph';
+
 const INF = 10000;
 
 class Point {
@@ -156,4 +160,28 @@ export function isInside(vertex: any, x: number, y: number): boolean {
   }
 
   return checkInside(polygon, polygon.length, new Point(x, y));
+}
+
+export function getBoundBox(vertex: any): mxRectangle {
+  let pt = vertexToPoint(vertex);
+
+  let left: number = pt.x;
+  let top: number = pt.y;
+  let right: number = pt.x;
+  let bottom: number = pt.y;
+
+  let r = getNextVertex(undefined, vertex);
+
+  while (r[0] && r[1] !== vertex) {
+    pt = vertexToPoint(r[1]);
+
+    if (pt.x < left) left = pt.x;
+    if (pt.x > right) right = pt.x;
+    if (pt.y < top) top = pt.y;
+    if (pt.y > bottom) bottom = pt.y;
+
+    r = getNextVertex(r[0], r[1]);
+  }
+
+  return new mx.mxRectangle(left, top, right - left, bottom - top);
 }

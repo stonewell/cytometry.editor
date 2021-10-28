@@ -8,9 +8,9 @@ import {
   StyleMap,
   mxCellTracker,
   mxUndoManager,
-  mxOutline,
 } from 'mxgraph';
-import { isInside } from './polygon';
+
+import { isInside, getBoundBox } from './polygon';
 import { Vertex, Cell, Graph, transactionEdit } from './graph-types';
 
 const VERTEX_SIZE: number = 5;
@@ -74,11 +74,7 @@ export class EditorGraph extends Graph {
 
   originPanningTrigger: any;
 
-  constructor(
-    readonly graph: mxGraph,
-    readonly outline: mxOutline,
-    readonly container: HTMLElement
-  ) {
+  constructor(readonly graph: mxGraph, readonly container: HTMLElement) {
     super(graph, container);
   }
 
@@ -97,9 +93,18 @@ export class EditorGraph extends Graph {
       mouseUp: this.onMouseUp.bind(this),
     });
 
-    this.graph.setBackgroundImage(
-      new mx.mxImage('./assets/img/image.png', 900, 900)
+    // limit cells moving boundary
+    this.graph.resizeContainer = false;
+    this.graph.ignoreScrollbars = true;
+    this.graph.autoScroll = false;
+    this.graph.autoExtend = false;
+    this.graph.maximumGraphBounds = new mx.mxRectangle(
+      0,
+      0,
+      this.container.offsetWidth,
+      this.container.offsetHeight
     );
+
     this.originPanningTrigger = this.graph.panningHandler.isPanningTrigger;
     this.graph.panningHandler.isPanningTrigger =
       this.isPanningTrigger.bind(this);
@@ -115,26 +120,7 @@ export class EditorGraph extends Graph {
     return true;
   }
 
-  moveAll(pt: any) {
-    this.graph.moveCells(
-      this.graph.getChildCells(this.root, true, true),
-      (pt.x - this.lastMousePt.x) / this.graph.view.scale,
-      (pt.y - this.lastMousePt.y) / this.graph.view.scale,
-      false
-    );
-  }
-
-  getPoint(evt: any) {
-    return new mx.mxPoint(evt.getGraphX(), evt.getGraphY());
-  }
-
-  onMouseWheel(evt: any, up: any) {
-    if (up) {
-      this.graph.zoomIn();
-    } else {
-      this.graph.zoomOut();
-    }
-  }
+  onMouseWheel(evt: any, up: any) {}
 
   onMouseDown(sender: any, evt: any): void {
     if (this.mouseDownInGraph(evt)) {
@@ -277,5 +263,43 @@ export class EditorGraph extends Graph {
     }
 
     return isInside(this.vertexes[0], evt.getGraphX(), evt.getGraphY());
+  }
+
+  canMoveAll(dx: number, dy: number): boolean {
+    const box = getBoundBox(this.vertexes[0]);
+
+    const left = box.x + dx;
+    const top = box.y + dy;
+    const right = left + box.width;
+    const bottom = top + box.height;
+
+    const gBox = this.graph.maximumGraphBounds;
+
+    const gleft = gBox.x + VERTEX_SIZE;
+    const gtop = gBox.y + VERTEX_SIZE;
+    const gright = gleft + gBox.width - VERTEX_SIZE * 2;
+    const gbottom = gtop + gBox.height - VERTEX_SIZE * 2;
+
+    return !(left < gleft || top < gtop || right > gright || bottom > gbottom);
+  }
+
+  moveAll(pt: any) {
+    const dx = (pt.x - this.lastMousePt.x) / this.graph.view.scale;
+    const dy = (pt.y - this.lastMousePt.y) / this.graph.view.scale;
+
+    if (!this.canMoveAll(dx, dy)) {
+      return;
+    }
+
+    this.graph.moveCells(
+      this.graph.getChildCells(this.root, true, true),
+      dx,
+      dy,
+      false
+    );
+  }
+
+  getPoint(evt: any) {
+    return new mx.mxPoint(evt.getGraphX(), evt.getGraphY());
   }
 }

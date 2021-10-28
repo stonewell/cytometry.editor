@@ -8,7 +8,6 @@ import {
   StyleMap,
   mxCellTracker,
   mxUndoManager,
-  mxOutline,
 } from 'mxgraph';
 import { EditorGraph } from './editor-graph-types';
 import { GateGraph } from './gate-graph-types';
@@ -75,7 +74,7 @@ export class GraphService {
     };
   }
 
-  createEditorGraph(canvas: HTMLElement, outline: HTMLElement): EditorGraph {
+  createEditorGraph(canvas: HTMLElement): EditorGraph {
     mx.mxEvent.disableContextMenu(canvas);
 
     const graph: mxGraph = new mx.mxGraph(canvas);
@@ -93,7 +92,7 @@ export class GraphService {
 
     style[mx.mxConstants.STYLE_SHAPE] = mx.mxConstants.SHAPE_RECTANGLE;
     style[mx.mxConstants.STYLE_OPACITY] = 100;
-    style[mx.mxConstants.STYLE_FONTCOLOR] = '#774400';
+    style[mx.mxConstants.STYLE_FONTCOLOR] = '#000000';
     style[mx.mxConstants.STYLE_RESIZABLE] = '0';
     style[mx.mxConstants.STYLE_NOLABEL] = '1';
     graph.getStylesheet().putCellStyle('VERTEX', style);
@@ -107,13 +106,10 @@ export class GraphService {
 
     graph.setTolerance(20);
     graph.centerZoom = true;
-    graph.setPanning(true);
-    graph.panningHandler.useLeftButtonForPanning = true;
+    graph.setPanning(false);
+    graph.panningHandler.useLeftButtonForPanning = false;
 
-    const outl = new mx.mxOutline(graph, outline);
-    outl.updateOnPan = true;
-
-    return new EditorGraph(graph, outl, canvas);
+    return new EditorGraph(graph, canvas);
   }
 
   createGateGraph(canvas: HTMLElement): GateGraph {

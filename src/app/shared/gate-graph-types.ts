@@ -106,13 +106,7 @@ export class GateGraph extends Graph {
     evt.consume();
   }
 
-  onMouseWheel(evt: any, up: any) {
-    if (up) {
-      this.graph.zoomIn();
-    } else {
-      this.graph.zoomOut();
-    }
-  }
+  onMouseWheel(evt: any, up: any) {}
 
   onClick(sender: any, evt: any) {
     const cell = evt.getProperty('cell');
