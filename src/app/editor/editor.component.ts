@@ -4,6 +4,7 @@ import { GraphService } from '../shared/graph.service';
 import { EditorGraph } from '../shared/editor-graph-types';
 
 import { FlowgateService } from '../shared/flowgate.service';
+import { GateService } from '../shared/gate.service';
 
 @Component({
   selector: 'app-editor',
@@ -18,10 +19,17 @@ export class EditorComponent implements OnInit {
   constructor(
     private readonly container: ElementRef,
     private readonly graphService: GraphService,
-    private readonly flowgateService: FlowgateService
+    private readonly flowgateService: FlowgateService,
+    private readonly gateService: GateService
   ) {}
 
   ngOnInit(): void {
+    this.gateService.gateLoaded.subscribe((_) => {
+      this.onGateLoaded();
+    });
+  }
+
+  onGateLoaded(): void {
     this.graph = this.graphService.createEditorGraph(
       this.graphCanvas.nativeElement
     );

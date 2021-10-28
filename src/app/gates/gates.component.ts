@@ -31,17 +31,25 @@ export class GatesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.graph = this.graphService.createGateGraph(
-      this.graphCanvas.nativeElement
+    this.subscription.add(
+      this.gateService.gateLoaded.subscribe((_) => {
+        this.onGateLoaded();
+      })
     );
-
-    this.graph.addRoot();
 
     this.subscription.add(
       this.gateService.currentGateUpdated.subscribe((evt: any) => {
         this.onGateNameUpdated();
       })
     );
+  }
+
+  onGateLoaded(): void {
+    this.graph = this.graphService.createGateGraph(
+      this.graphCanvas.nativeElement
+    );
+
+    this.graph.addRoot();
   }
 
   ngOnDestroy(): void {

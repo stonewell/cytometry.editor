@@ -14,10 +14,25 @@ import { FlowgateService } from './shared/flowgate.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+import { Routes, RouterModule } from '@angular/router'; // CLI imports router
+
+const routes: Routes = [
+  {
+    path: '**',
+    component: AppComponent,
+  },
+]; // sets up routes constant where you define your routes
+
 @NgModule({
   declarations: [AppComponent, EditorComponent, GatesComponent, GateComponent],
-  imports: [FormsModule, BrowserModule, HttpClientModule],
+  imports: [
+    FormsModule,
+    BrowserModule,
+    HttpClientModule,
+    RouterModule.forRoot(routes),
+  ],
   providers: [GraphService, GateService, FlowgateService],
   bootstrap: [AppComponent],
+  exports: [RouterModule],
 })
 export class AppModule {}

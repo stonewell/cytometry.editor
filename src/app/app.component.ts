@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GateService } from './shared/gate.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +10,18 @@ import { GateService } from './shared/gate.service';
 export class AppComponent implements OnInit {
   title = 'editor';
 
-  constructor(private readonly gateService: GateService) {}
+  constructor(
+    private readonly gateService: GateService,
+    private activeRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.gateService.loadGate('');
+    this.activeRoute.queryParams.subscribe((params) => {
+      const expFile = params['expFile'];
+
+      if (expFile) {
+        this.gateService.loadGate(expFile);
+      }
+    });
   }
 }

@@ -9,6 +9,7 @@ import { Point, Gate } from './gate-types';
 })
 export class GateService {
   currentGateUpdated: EventEmitter<any> = new EventEmitter();
+  gateLoaded: EventEmitter<any> = new EventEmitter();
 
   private rootGate: Gate;
   private currentGate: Gate;
@@ -24,6 +25,8 @@ export class GateService {
     this.currentGate = this.rootGate;
 
     console.log(`gate loaded for file:${dataFileName}`);
+
+    this.gateLoaded.emit(true);
   }
 
   getGateInfo(): any {
