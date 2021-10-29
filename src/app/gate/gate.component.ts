@@ -13,7 +13,6 @@ export class GateComponent implements OnInit, OnDestroy {
 
   _jsonURL: string = './assets/data/fginfo_3.json';
 
-  gateData: any;
   gateParameters: string[] = [];
 
   xParameter: string;
@@ -27,12 +26,8 @@ export class GateComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription.add(
-      this.getJSON().subscribe((data) => {
-        this.gateData = data;
-
-        for (const key in data.parameters) {
-          this.gateParameters.push(key);
-        }
+      this.gateService.gateLoaded.subscribe((_) => {
+        this.gateParameters = this.gateService.gateParameters;
 
         this.onGateUpdated();
       })

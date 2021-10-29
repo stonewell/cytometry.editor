@@ -1,8 +1,9 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Observable, EMPTY } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 
 import { Point, Gate } from './gate-types';
+import { ExpFile, FlowgateService } from './flowgate.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -14,19 +15,35 @@ export class GateService {
   private rootGate: Gate;
   private currentGate: Gate;
   private gateInfo: any;
-  private gateParameters: string[] = [];
 
-  constructor(private readonly httpClient: HttpClient) {}
+  gateParameters: string[] = [];
 
-  loadGate(dataFileName: string): void {
-    this.gateParameters = ['FSC-A', 'FSC-H'];
+  private expFile: ExpFile;
 
-    this.rootGate = this.createDefaultGate();
-    this.currentGate = this.rootGate;
+  constructor(private readonly flowgateService: FlowgateService) {}
 
-    console.log(`gate loaded for file:${dataFileName}`);
+  loadGate(expFileId: string): void {
+    this.flowgateService.getFileInfoWithGateTree(expFileId)
+      .subscribe((expFile) => {
+        this.expFile = expFile;
 
-    this.gateLoaded.emit(true);
+        this.gateParameters = expFile.channels.map(c => c.shortName);
+
+        if (this.gateParameters.length < 2) {
+          this.gateParameters = [...this.gateParameters, ...['FSC-A', 'FSC-H']];
+        }
+
+        if (expFile.gates.length > 0) {
+        } else {
+          this.rootGate = this.createDefaultGate();
+        }
+
+        this.currentGate = this.rootGate;
+
+        console.log(`gate loaded for file:${expFile.title}`);
+
+        this.gateLoaded.emit(true);
+      });
   }
 
   getGateInfo(): any {

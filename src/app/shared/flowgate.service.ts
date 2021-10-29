@@ -12,7 +12,7 @@ export interface ExpFile {
   id: number;
   title: string;
   gates: string[];
-  channel: ExpFileChannel[];
+  channels: ExpFileChannel[];
 }
 
 @Injectable({
@@ -21,11 +21,10 @@ export interface ExpFile {
 export class FlowgateService {
   constructor(private readonly httpClient: HttpClient) {}
 
-  getFileInfo(id: string) {
-    this.httpClient
-      .get<ExpFile>('/expFile/renderFcsInfoWithGateTree/2')
-      .subscribe((data) => {
-        console.log(JSON.stringify(data));
-      });
+  getFileInfoWithGateTree(id: string): Observable<ExpFile> {
+    const url = `/expFile/renderFcsInfoWithGateTree/${id}`;
+
+    return this.httpClient
+      .get<ExpFile>(url);
   }
 }

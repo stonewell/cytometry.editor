@@ -1,4 +1,6 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
+
+import { Subscription } from 'rxjs';
 
 import { GraphService } from '../shared/graph.service';
 import { EditorGraph } from '../shared/editor-graph-types';
@@ -11,10 +13,11 @@ import { GateService } from '../shared/gate.service';
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.css'],
 })
-export class EditorComponent implements OnInit {
+export class EditorComponent implements OnInit, OnDestroy {
   @ViewChild('canvas', { static: true }) graphCanvas: ElementRef;
 
   graph: EditorGraph;
+  subscription: Subscription = new Subscription();
 
   constructor(
     private readonly container: ElementRef,
@@ -24,9 +27,13 @@ export class EditorComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.gateService.gateLoaded.subscribe((_) => {
+    this.subscription.add(this.gateService.gateLoaded.subscribe((_) => {
       this.onGateLoaded();
-    });
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onGateLoaded(): void {
@@ -42,7 +49,5 @@ export class EditorComponent implements OnInit {
     this.graph.addEdge(v2, v3);
     this.graph.addEdge(v3, v4);
     this.graph.addEdge(v1, v4);
-
-    this.flowgateService.getFileInfo('');
   }
 }
