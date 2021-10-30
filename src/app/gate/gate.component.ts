@@ -11,8 +11,6 @@ import { GateService } from '../shared/gate.service';
 export class GateComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
 
-  _jsonURL: string = './assets/data/fginfo_3.json';
-
   gateParameters: string[] = [];
 
   xParameter: string;
@@ -42,10 +40,6 @@ export class GateComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-  }
-
-  getJSON(): Observable<any> {
-    return this.http.get(this._jsonURL);
   }
 
   onUIUpdate(): void {

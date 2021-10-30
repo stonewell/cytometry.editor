@@ -111,7 +111,7 @@ export class GraphService {
     graph.setPanning(false);
     graph.panningHandler.useLeftButtonForPanning = false;
 
-    return new EditorGraph(graph, canvas);
+    return new EditorGraph(graph, canvas, this.gateService);
   }
 
   createGateGraph(canvas: HTMLElement): GateGraph {

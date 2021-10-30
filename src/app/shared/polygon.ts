@@ -147,17 +147,7 @@ function getNextVertex(fromEdge: any, vertex: any) {
 }
 
 export function isInside(vertex: any, x: number, y: number): boolean {
-  const polygon: Point[] = [];
-
-  polygon.push(vertexToPoint(vertex));
-
-  let r = getNextVertex(undefined, vertex);
-
-  while (r[0] && r[1] !== vertex) {
-    polygon.push(vertexToPoint(r[1]));
-
-    r = getNextVertex(r[0], r[1]);
-  }
+  const polygon: Point[] = getVertexPolygon(vertex);
 
   return checkInside(polygon, polygon.length, new Point(x, y));
 }
@@ -184,4 +174,20 @@ export function getBoundBox(vertex: any): mxRectangle {
   }
 
   return new mx.mxRectangle(left, top, right - left, bottom - top);
+}
+
+export function getVertexPolygon(vertex: any): Point[] {
+  const polygon: Point[] = [];
+
+  polygon.push(vertexToPoint(vertex));
+
+  let r = getNextVertex(undefined, vertex);
+
+  while (r[0] && r[1] !== vertex) {
+    polygon.push(vertexToPoint(r[1]));
+
+    r = getNextVertex(r[0], r[1]);
+  }
+
+  return polygon;
 }

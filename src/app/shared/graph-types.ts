@@ -75,4 +75,9 @@ export class Graph {
   onUndoableEdit(sender: any, evt: any): void {
     this.undoManager.undoableEditHappened(evt.getProperty('edit'));
   }
+
+  clear(): void {
+    this.model.clear();
+    this.root = this.graph.getDefaultParent();
+  }
 }

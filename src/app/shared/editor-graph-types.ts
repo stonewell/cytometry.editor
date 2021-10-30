@@ -10,8 +10,9 @@ import {
   mxUndoManager,
 } from 'mxgraph';
 
-import { isInside, getBoundBox } from './polygon';
+import { isInside, getBoundBox, getVertexPolygon } from './polygon';
 import { Vertex, Cell, Graph, transactionEdit } from './graph-types';
+import { GateService } from './gate.service';
 
 const VERTEX_SIZE: number = 5;
 
@@ -74,7 +75,9 @@ export class EditorGraph extends Graph {
 
   originPanningTrigger: any;
 
-  constructor(readonly graph: mxGraph, readonly container: HTMLElement) {
+  constructor(readonly graph: mxGraph,
+              readonly container: HTMLElement,
+              readonly gateService: GateService) {
     super(graph, container);
   }
 
@@ -110,6 +113,11 @@ export class EditorGraph extends Graph {
       this.isPanningTrigger.bind(this);
 
     mx.mxEvent.addMouseWheelListener(this.onMouseWheel.bind(this));
+
+    this.model.addListener(
+      mx.mxEvent.NOTIFY,
+      this.onModelNotify.bind(this)
+    );
   }
 
   isPanningTrigger(me: any): boolean {
@@ -301,5 +309,25 @@ export class EditorGraph extends Graph {
 
   getPoint(evt: any) {
     return new mx.mxPoint(evt.getGraphX(), evt.getGraphY());
+  }
+
+  onModelNotify(sender: any, evt: any) {
+    if (this.vertexes?.length > 0) {
+      const currentGate = this.gateService.getCurrentGate();
+
+      currentGate.points = getVertexPolygon(this.vertexes[0]).map(p => {
+        return {x: p.x, y: p.y};
+      });
+    }
+  }
+
+  clear(): void {
+    this.vertexes = [];
+    this.edges = [];
+
+    this.isMouseDown = false;
+    this.lastMousePt = undefined;
+
+    super.clear();
   }
 }
