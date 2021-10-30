@@ -80,10 +80,10 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.graph.addEdge(lastVertex, firstVertex);
       }
     } else {
-      const v1 = this.graph.addVertex(126, 126);
-      const v2 = this.graph.addVertex(126, 184);
-      const v3 = this.graph.addVertex(184, 184);
-      const v4 = this.graph.addVertex(184, 126);
+      const v1 = this.graph.addVertex(0, 0);
+      const v2 = this.graph.addVertex(0, 58);
+      const v3 = this.graph.addVertex(58, 58);
+      const v4 = this.graph.addVertex(58, 0);
       this.graph.addEdge(v1, v2);
       this.graph.addEdge(v2, v3);
       this.graph.addEdge(v3, v4);
