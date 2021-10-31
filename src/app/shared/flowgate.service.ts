@@ -13,6 +13,14 @@ export interface ExpFile {
   title: string;
   gates: string[];
   channels: ExpFileChannel[];
+  plotMargin: GatePlotMargin;
+}
+
+export interface GatePlotMargin {
+  top: number;
+  left: number;
+  bottom: number;
+  right: number;
 }
 
 @Injectable({
@@ -24,7 +32,6 @@ export class FlowgateService {
   getFileInfoWithGateTree(id: string): Observable<ExpFile> {
     const url = `/expFile/renderFcsInfoWithGateTree/${id}`;
 
-    return this.httpClient
-      .get<ExpFile>(url);
+    return this.httpClient.get<ExpFile>(url);
   }
 }

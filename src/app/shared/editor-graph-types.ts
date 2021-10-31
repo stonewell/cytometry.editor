@@ -75,9 +75,11 @@ export class EditorGraph extends Graph {
 
   originPanningTrigger: any;
 
-  constructor(readonly graph: mxGraph,
-              readonly container: HTMLElement,
-              readonly gateService: GateService) {
+  constructor(
+    readonly graph: mxGraph,
+    readonly container: HTMLElement,
+    readonly gateService: GateService
+  ) {
     super(graph, container);
   }
 
@@ -114,10 +116,7 @@ export class EditorGraph extends Graph {
 
     mx.mxEvent.addMouseWheelListener(this.onMouseWheel.bind(this));
 
-    this.model.addListener(
-      mx.mxEvent.NOTIFY,
-      this.onModelNotify.bind(this)
-    );
+    this.model.addListener(mx.mxEvent.NOTIFY, this.onModelNotify.bind(this));
   }
 
   isPanningTrigger(me: any): boolean {
@@ -282,11 +281,20 @@ export class EditorGraph extends Graph {
     const bottom = top + box.height;
 
     const gBox = this.graph.maximumGraphBounds;
+    const plotMargin = this.gateService.getGatePlotMargin();
 
-    const gleft = gBox.x + VERTEX_SIZE;
-    const gtop = gBox.y + VERTEX_SIZE;
-    const gright = gleft + gBox.width - VERTEX_SIZE * 2;
-    const gbottom = gtop + gBox.height - VERTEX_SIZE * 2;
+    const gleft = gBox.x + VERTEX_SIZE + gBox.width * plotMargin.left;
+    const gtop = gBox.y + VERTEX_SIZE + gBox.height * plotMargin.top;
+    const gright =
+      gleft +
+      gBox.width -
+      VERTEX_SIZE * 2 -
+      gBox.width * (plotMargin.left + plotMargin.right);
+    const gbottom =
+      gtop +
+      gBox.height -
+      VERTEX_SIZE * 2 -
+      gBox.height * (plotMargin.top + plotMargin.bottom);
 
     return !(left < gleft || top < gtop || right > gright || bottom > gbottom);
   }
@@ -315,8 +323,8 @@ export class EditorGraph extends Graph {
     if (this.vertexes?.length > 0) {
       const currentGate = this.gateService.getCurrentGate();
 
-      currentGate.points = getVertexPolygon(this.vertexes[0]).map(p => {
-        return {x: p.x, y: p.y};
+      currentGate.points = getVertexPolygon(this.vertexes[0]).map((p) => {
+        return { x: p.x, y: p.y };
       });
     }
   }

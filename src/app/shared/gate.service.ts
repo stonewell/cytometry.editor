@@ -2,8 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Observable, EMPTY } from 'rxjs';
 
 import { Point, Gate } from './gate-types';
-import { ExpFile, FlowgateService } from './flowgate.service';
-
+import { ExpFile, FlowgateService, GatePlotMargin } from './flowgate.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +22,12 @@ export class GateService {
   constructor(private readonly flowgateService: FlowgateService) {}
 
   loadGate(expFileId: string): void {
-    this.flowgateService.getFileInfoWithGateTree(expFileId)
+    this.flowgateService
+      .getFileInfoWithGateTree(expFileId)
       .subscribe((expFile) => {
         this.expFile = expFile;
 
-        this.gateParameters = expFile.channels.map(c => c.shortName);
+        this.gateParameters = expFile.channels.map((c) => c.shortName);
 
         if (this.gateParameters.length < 2) {
           this.gateParameters = [...this.gateParameters, ...['FSC-A', 'FSC-H']];
@@ -52,6 +52,10 @@ export class GateService {
 
   getGatePlotUri(gate: Gate): string {
     return '';
+  }
+
+  getGatePlotMargin(): GatePlotMargin {
+    return this.expFile.plotMargin;
   }
 
   addGate(parent: Gate | null, child: Gate | null = null): Gate {

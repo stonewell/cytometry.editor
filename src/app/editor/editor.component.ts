@@ -1,4 +1,10 @@
-import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
@@ -8,6 +14,7 @@ import { EditorGraph } from '../shared/editor-graph-types';
 import { FlowgateService } from '../shared/flowgate.service';
 import { GateService } from '../shared/gate.service';
 
+const GATE_INITIAL_SIZE = 58;
 
 @Component({
   selector: 'app-editor',
@@ -28,9 +35,11 @@ export class EditorComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.subscription.add(this.gateService.gateLoaded.subscribe((_) => {
-      this.onGateLoaded();
-    }));
+    this.subscription.add(
+      this.gateService.gateLoaded.subscribe((_) => {
+        this.onGateLoaded();
+      })
+    );
     this.subscription.add(
       this.gateService.currentGateUpdated.subscribe((_: any) => {
         this.onGateUpdated();
@@ -80,10 +89,25 @@ export class EditorComponent implements OnInit, OnDestroy {
         this.graph.addEdge(lastVertex, firstVertex);
       }
     } else {
-      const v1 = this.graph.addVertex(0, 0);
-      const v2 = this.graph.addVertex(0, 58);
-      const v3 = this.graph.addVertex(58, 58);
-      const v4 = this.graph.addVertex(58, 0);
+      const gBox = this.graph.graph.maximumGraphBounds;
+      const plotMargin = this.gateService.getGatePlotMargin();
+
+      const v1 = this.graph.addVertex(
+        gBox.width * plotMargin.left,
+        gBox.height * plotMargin.top
+      );
+      const v2 = this.graph.addVertex(
+        gBox.width * plotMargin.left,
+        GATE_INITIAL_SIZE + gBox.height * plotMargin.top
+      );
+      const v3 = this.graph.addVertex(
+        GATE_INITIAL_SIZE + gBox.width * plotMargin.left,
+        GATE_INITIAL_SIZE + gBox.height * plotMargin.top
+      );
+      const v4 = this.graph.addVertex(
+        GATE_INITIAL_SIZE + gBox.width * plotMargin.left,
+        gBox.height * plotMargin.top
+      );
       this.graph.addEdge(v1, v2);
       this.graph.addEdge(v2, v3);
       this.graph.addEdge(v3, v4);
