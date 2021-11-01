@@ -6,6 +6,7 @@ export interface ExpFileChannel {
   shortName: string;
   name: string;
   id: string;
+  range: number;
 }
 
 export interface ExpFile {
