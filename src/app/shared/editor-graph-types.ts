@@ -326,6 +326,8 @@ export class EditorGraph extends Graph {
       currentGate.points = getVertexPolygon(this.vertexes[0]).map((p) => {
         return { x: p.x, y: p.y };
       });
+
+      this.gateService.notifyCurrentGateUpdated('points');
     }
   }
 

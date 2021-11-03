@@ -39,7 +39,9 @@ export class GatesComponent implements OnInit, OnDestroy {
 
     this.subscription.add(
       this.gateService.currentGateUpdated.subscribe((evt: any) => {
-        this.onGateNameUpdated();
+        if (evt !== 'points') {
+          this.onGateNameUpdated();
+        }
       })
     );
   }

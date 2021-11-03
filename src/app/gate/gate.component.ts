@@ -32,8 +32,10 @@ export class GateComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(
-      this.gateService.currentGateUpdated.subscribe((_: any) => {
-        this.onGateUpdated();
+      this.gateService.currentGateUpdated.subscribe((evt: any) => {
+        if (evt !== 'points') {
+          this.onGateUpdated();
+        }
       })
     );
   }

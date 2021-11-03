@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Observable, EMPTY } from 'rxjs';
 
-import { Point, Gate } from './gate-types';
+import { Point, Gate, gateFromJSON, gateToJSON } from './gate-types';
 import { ExpFile, FlowgateService, GatePlotMargin } from './flowgate.service';
 
 @Injectable({
@@ -19,7 +19,15 @@ export class GateService {
 
   private expFile: ExpFile;
 
-  constructor(private readonly flowgateService: FlowgateService) {}
+  constructor(private readonly flowgateService: FlowgateService) {
+    this.currentGateUpdated.subscribe((_) => {
+      const s = gateToJSON(this.rootGate);
+      console.log(s);
+
+      const g = gateFromJSON(s);
+      console.log(gateToJSON(g));
+    });
+  }
 
   loadGate(expFileId: string): void {
     this.flowgateService
@@ -77,15 +85,17 @@ export class GateService {
     reutrn parent gate
    */
   removeGate(gate: Gate): Gate {
-    const parent: Gate = gate.parent;
+    const parent = gate.parent;
 
-    const i = parent.children.indexOf(gate);
+    if (parent) {
+      const i = parent.children.indexOf(gate);
 
-    if (i >= 0) {
-      parent.children.splice(i, 1);
+      if (i >= 0) {
+        parent.children.splice(i, 1);
+      }
     }
 
-    return parent;
+    return parent as Gate;
   }
 
   createDefaultGate(): Gate {

@@ -21,7 +21,7 @@ export class Vertex extends Cell {
   }
 
   getState() {
-    return this.g.graph.view.getState(this.native);
+    return this.g.graph.view.getState(this.native, true);
   }
 }
 

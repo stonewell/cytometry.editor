@@ -128,6 +128,10 @@ function checkInside(polygon: any, n: any, p: any) {
 function vertexToPoint(vertex: any) {
   const state = vertex.getState();
 
+  if (state === null) {
+    console.log('state is nullllllllllllllllllll');
+  }
+
   return new Point(state.x, state.y);
 }
 
