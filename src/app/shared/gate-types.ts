@@ -8,6 +8,7 @@ export interface Gate {
   customName: boolean;
   x: string;
   y: string;
+  plotKey: string;
   points: Point[];
   children: Gate[];
   parent?: Gate;
@@ -23,6 +24,7 @@ export function gateFromJSONObject(obj: any, parent: any) {
     customName: obj['customName'] === 1 ? true : false,
     x: obj['x'],
     y: obj['y'],
+    plotKey: obj['ployKey'],
     points:
       obj['points']?.map((p: any) => {
         return { x: p['x'], y: p['y'] };
@@ -42,7 +44,9 @@ export function gateToJSON(g: Gate): string {
     g.x
   }", "y":"${g.y}", "points":[${
     g.points?.map((p) => pointToJSON(p)).join(',') || ''
-  }], "children":[${g.children?.map((c) => gateToJSON(c)).join(',') || ''}]}`;
+  }], "children":[${
+    g.children?.map((c) => gateToJSON(c)).join(',') || ''
+  }], "plotKey":"${g.plotKey}"}`;
 }
 
 export function pointToJSON(p: any): string {

@@ -3,6 +3,9 @@ import { Observable, EMPTY } from 'rxjs';
 
 import { Point, Gate, gateFromJSON, gateToJSON } from './gate-types';
 import { ExpFile, FlowgateService, GatePlotMargin } from './flowgate.service';
+import { mergeAll, mergeMap, switchMap, filter, tap } from 'rxjs/operators';
+
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
@@ -20,13 +23,22 @@ export class GateService {
   private expFile: ExpFile;
 
   constructor(private readonly flowgateService: FlowgateService) {
-    this.currentGateUpdated.subscribe((_) => {
-      const s = gateToJSON(this.rootGate);
-      console.log(s);
+    this.currentGateUpdated
+      .pipe(
+        tap((evt) => console.log(`current gate  updated:${evt}`)),
 
-      const g = gateFromJSON(s);
-      console.log(gateToJSON(g));
-    });
+        filter((evt) => evt !== 'plot' && evt !== 'points'),
+
+        mergeMap((evt) =>
+          this.flowgateService.updateGatePlot(
+            this.expFile,
+            gateToJSON(this.rootGate)
+          )
+        )
+      )
+      .subscribe((_) => {
+        this.notifyCurrentGateUpdated('plot');
+      });
   }
 
   loadGate(expFileId: string): void {
@@ -42,6 +54,7 @@ export class GateService {
         }
 
         if (expFile.gates.length > 0) {
+          console.log(expFile.gates[0].gateJson);
         } else {
           this.rootGate = this.createDefaultGate();
         }
@@ -107,6 +120,7 @@ export class GateService {
       children: [],
       parent: this.rootGate,
       customName: false,
+      plotKey: uuidv4(),
     };
   }
 

@@ -9,10 +9,15 @@ export interface ExpFileChannel {
   range: number;
 }
 
+export interface ExpFileGate {
+  id: number;
+  gateJson: string;
+}
+
 export interface ExpFile {
   id: number;
   title: string;
-  gates: string[];
+  gates: ExpFileGate[];
   channels: ExpFileChannel[];
   plotMargin: GatePlotMargin;
 }
@@ -34,5 +39,10 @@ export class FlowgateService {
     const url = `/expFile/renderFcsInfoWithGateTree/${id}`;
 
     return this.httpClient.get<ExpFile>(url);
+  }
+
+  updateGatePlot(expFile: ExpFile, gatesJson: string): Observable<any> {
+    const url = `/expFile/updateGatePlot/${expFile.id}`;
+    return this.httpClient.post<any>(url, '');
   }
 }
