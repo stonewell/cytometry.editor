@@ -25,7 +25,7 @@ export class GateService {
   constructor(private readonly flowgateService: FlowgateService) {
     this.currentGateUpdated
       .pipe(
-        tap((evt) => console.log(`current gate  updated:${evt}`)),
+        tap((evt) => console.log(`current gate  updated:${evt}, ${this.currentGate.plotKey}`)),
 
         filter((evt) => evt !== 'plot' && evt !== 'points'),
 

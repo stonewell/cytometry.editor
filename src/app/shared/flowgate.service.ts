@@ -42,7 +42,11 @@ export class FlowgateService {
   }
 
   updateGatePlot(expFile: ExpFile, gatesJson: string): Observable<any> {
-    const url = `/expFile/updateGatePlot/${expFile.id}`;
-    return this.httpClient.post<any>(url, '');
+    const url = `/expFile/updateGatePlot`;
+
+    return this.httpClient.post<any>(url, {
+      expFile: expFile.id,
+      gates: JSON.parse(gatesJson)
+    });
   }
 }
