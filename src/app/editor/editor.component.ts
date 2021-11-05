@@ -26,6 +26,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   graph: EditorGraph;
   subscription: Subscription = new Subscription();
+  canvasBackgroundPlotKey: string;
 
   constructor(
     private readonly container: ElementRef,
@@ -44,6 +45,8 @@ export class EditorComponent implements OnInit, OnDestroy {
       this.gateService.currentGateUpdated.subscribe((evt: any) => {
         if (evt !== 'points' && evt !== 'plot') {
           this.onGateUpdated();
+        } else if (evt === 'plot') {
+          this.loadGatePlot();
         }
       })
     );
@@ -116,5 +119,12 @@ export class EditorComponent implements OnInit, OnDestroy {
       this.graph.addEdge(v3, v4);
       this.graph.addEdge(v1, v4);
     }
+  }
+
+  loadGatePlot() {
+    const currentGate = this.gateService.getCurrentGate();
+    this.canvasBackgroundPlotKey = `/expFile/renderGatePlot?plotKey=${currentGate.plotKey}&v=${new Date().getTime()}`;
+
+    console.log(this.canvasBackgroundPlotKey);
   }
 }

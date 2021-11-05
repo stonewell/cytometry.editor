@@ -29,12 +29,7 @@ export class GateService {
 
         filter((evt) => evt !== 'plot' && evt !== 'points'),
 
-        mergeMap((evt) =>
-          this.flowgateService.updateGatePlot(
-            this.expFile,
-            gateToJSON(this.rootGate)
-          )
-        )
+        mergeMap((evt) => this.updateGatePlot())
       )
       .subscribe((_) => {
         this.notifyCurrentGateUpdated('plot');
@@ -60,6 +55,10 @@ export class GateService {
         }
 
         this.currentGate = this.rootGate;
+
+        this.updateGatePlot().subscribe((_) => {
+          this.notifyCurrentGateUpdated('plot');
+        });
 
         console.log(`gate loaded for file:${expFile.title}`);
 
@@ -148,5 +147,12 @@ export class GateService {
 
   notifyCurrentGateUpdated(evt: any = null): void {
     this.currentGateUpdated.emit(evt);
+  }
+
+  updateGatePlot() {
+    return this.flowgateService.updateGatePlot(
+      this.expFile,
+      gateToJSON(this.rootGate)
+    )
   }
 }
