@@ -319,12 +319,38 @@ export class EditorGraph extends Graph {
     return new mx.mxPoint(evt.getGraphX(), evt.getGraphY());
   }
 
+  pointToPlotPoint(p: any) {
+    const gBox = this.graph.maximumGraphBounds;
+    const plotMargin = this.gateService.getGatePlotMargin();
+
+    const plotLeft = gBox.x + gBox.width * plotMargin.left;
+    const plotTop = gBox.y + gBox.height * plotMargin.top;
+
+    const plotWidth = gBox.width * (1 - plotMargin.left - plotMargin.right);
+    const plotHeight = gBox.height * (1 - plotMargin.top - plotMargin.bottom);
+
+    return { x: (p.x - plotLeft) / plotWidth, y: (plotHeight - p.y + plotTop) / plotHeight };
+  }
+
+  plotPointToPoint(p: any) {
+    const gBox = this.graph.maximumGraphBounds;
+    const plotMargin = this.gateService.getGatePlotMargin();
+
+    const plotLeft = gBox.x + gBox.width * plotMargin.left;
+    const plotTop = gBox.y + gBox.height * plotMargin.top;
+
+    const plotWidth = gBox.width * (1 - plotMargin.left - plotMargin.right);
+    const plotHeight = gBox.height * (1 - plotMargin.top - plotMargin.bottom);
+
+    return { x: p.x * plotWidth + plotLeft, y: (1 - p.y) * plotHeight + plotTop };
+  }
+
   onModelNotify(sender: any, evt: any) {
     if (this.vertexes?.length > 0) {
       const currentGate = this.gateService.getCurrentGate();
 
       currentGate.points = getVertexPolygon(this.vertexes[0]).map((p) => {
-        return { x: p.x, y: p.y };
+        return this.pointToPlotPoint(p);
       });
 
       this.gateService.notifyCurrentGateUpdated('points');

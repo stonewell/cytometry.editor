@@ -116,7 +116,12 @@ export class GateService {
       name: `${this.gateParameters[0]} vs. ${this.gateParameters[1]}`,
       x: this.gateParameters[0],
       y: this.gateParameters[1],
-      points: [],
+      points: [
+        {x: 250 / 600.0, y: 250 / 600.0},
+        {x: 350 / 600.0, y: 250 / 600.0},
+        {x: 350 / 600.0, y: 350 / 600.0},
+        {x: 250 / 600.0, y: 350 / 600.0},
+      ],
       children: [],
       parent: this.rootGate,
       customName: false,

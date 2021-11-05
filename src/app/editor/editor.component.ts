@@ -74,7 +74,8 @@ export class EditorComponent implements OnInit, OnDestroy {
       let firstVertex = undefined;
 
       for (const pt of currentGate.points) {
-        let v = this.graph.addVertex(pt.x, pt.y);
+        const graphPt = this.graph.plotPointToPoint(pt);
+        let v = this.graph.addVertex(graphPt.x, graphPt.y);
 
         if (lastVertex) {
           this.graph.addEdge(lastVertex, v);
