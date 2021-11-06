@@ -71,6 +71,8 @@ export class EditorGraph extends Graph {
   edges: EditorEdge[] = [];
 
   isMouseDown: boolean = false;
+  isMoving: boolean = false;
+  isCellMoved: boolean = false;
   lastMousePt: any;
 
   originPanningTrigger: any;
@@ -91,6 +93,7 @@ export class EditorGraph extends Graph {
       this.onDoubleClick.bind(this)
     );
     this.graph.addListener(mx.mxEvent.CLICK, this.onClick.bind(this));
+    this.graph.addListener(mx.mxEvent.CELLS_MOVED, this.onCellsMoved.bind(this));
 
     this.graph.addMouseListener({
       mouseDown: this.onMouseDown.bind(this),
@@ -130,8 +133,11 @@ export class EditorGraph extends Graph {
   onMouseWheel(evt: any, up: any) {}
 
   onMouseDown(sender: any, evt: any): void {
+    this.isMouseDown = true;
+    this.isCellMoved = false;
+
     if (this.mouseDownInGraph(evt)) {
-      this.isMouseDown = true;
+      this.isMoving = true;
 
       this.lastMousePt = this.getPoint(evt);
       evt.consume();
@@ -139,17 +145,24 @@ export class EditorGraph extends Graph {
   }
 
   onMouseUp(sender: any, evt: any): void {
-    if (this.isMouseDown) {
+    if (this.isMoving) {
       const pt = this.getPoint(evt);
 
       this.moveAll(pt);
       evt.consume();
     }
+
+    if (this.isMoving || this.isCellMoved) {
+      this.gateService.notifyCurrentGateUpdated('verties-moved');
+    }
+
+    this.isMoving = false;
     this.isMouseDown = false;
+    this.isCellMoved = false;
   }
 
   onMouseMove(sender: any, evt: any): void {
-    if (!this.isMouseDown) return;
+    if (!this.isMoving) return;
 
     const pt = this.getPoint(evt);
 
@@ -179,6 +192,10 @@ export class EditorGraph extends Graph {
   }
 
   onClick(sender: any, evt: any) {}
+
+  onCellsMoved(sender: any, evt: any) {
+    this.isCellMoved = !this.isMoving;
+  }
 
   @transactionEdit()
   remove(cells: any): void {
@@ -362,6 +379,9 @@ export class EditorGraph extends Graph {
     this.edges = [];
 
     this.isMouseDown = false;
+    this.isMoving = false;
+    this.isCellMoved = false;
+
     this.lastMousePt = undefined;
 
     super.clear();

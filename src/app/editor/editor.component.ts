@@ -43,7 +43,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     );
     this.subscription.add(
       this.gateService.currentGateUpdated.subscribe((evt: any) => {
-        if (evt !== 'points' && evt !== 'plot') {
+        if (evt !== 'points' && evt !== 'plot' && evt !== 'verties-moved') {
           this.onGateUpdated();
         } else if (evt === 'plot') {
           this.loadGatePlot();
@@ -124,7 +124,5 @@ export class EditorComponent implements OnInit, OnDestroy {
   loadGatePlot() {
     const currentGate = this.gateService.getCurrentGate();
     this.canvasBackgroundPlotKey = `/expFile/renderGatePlot?plotKey=${currentGate.plotKey}&v=${new Date().getTime()}`;
-
-    console.log(this.canvasBackgroundPlotKey);
   }
 }

@@ -25,8 +25,6 @@ export class GateService {
   constructor(private readonly flowgateService: FlowgateService) {
     this.currentGateUpdated
       .pipe(
-        tap((evt) => console.log(`current gate  updated:${evt}, ${this.currentGate.plotKey}`)),
-
         filter((evt) => evt !== 'plot' && evt !== 'points'),
 
         mergeMap((evt) => this.updateGatePlot())
@@ -50,6 +48,7 @@ export class GateService {
 
         if (expFile.gates.length > 0) {
           console.log(expFile.gates[0].gateJson);
+          this.rootGate = gateFromJSON(expFile.gates[0].gateJson);
         } else {
           this.rootGate = this.createDefaultGate();
         }
@@ -59,8 +58,6 @@ export class GateService {
         this.updateGatePlot().subscribe((_) => {
           this.notifyCurrentGateUpdated('plot');
         });
-
-        console.log(`gate loaded for file:${expFile.title}`);
 
         this.gateLoaded.emit(true);
       });
