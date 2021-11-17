@@ -56,9 +56,9 @@
         *ngIf="
           data.transformType === transformType.linear ||
           data.transformType === transformType.logicle
-          "
-        [ngModel]="data.a"
-        />
+        "
+        [(ngModel)]="data.a"
+      />
 
       <span
         *ngIf="
@@ -74,7 +74,7 @@
           data.transformType === transformType.log ||
           data.transformType === transformType.logicle
         "
-        [ngModel]="data.m"
+        [(ngModel)]="data.m"
       />
 
       <span *ngIf="data.transformType !== transformType.none">T</span>
@@ -82,20 +82,24 @@
         type="number"
         max="1000"
         *ngIf="data.transformType !== transformType.none"
-        [ngModel]="data.t"
+        [(ngModel)]="data.t"
       />
       <span *ngIf="data.transformType === transformType.logicle">W</span>
       <input
         type="number"
         max="1000"
         *ngIf="data.transformType === transformType.logicle"
-        [ngModel]="data.w"
+        [(ngModel)]="data.w"
       />
     </div>
 
     <div class="predefined" *ngSwitchCase="transformType.predefined">
       <p>
-        <select></select>
+        <select [(ngModel)]="data.predefinedName">
+          <option *ngFor="let t of predefinedTransforms" [ngValue]="t">
+            {{ t }}
+          </option>
+        </select>
       </p>
     </div>
   </container-element>

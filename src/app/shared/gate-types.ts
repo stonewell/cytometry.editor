@@ -12,6 +12,8 @@ export interface Gate {
   points: Point[];
   children: Gate[];
   parent?: Gate;
+  xTransform?: Transform;
+  yTransform?: Transform;
 }
 
 export enum TransformType {
@@ -24,6 +26,7 @@ export enum TransformType {
 
 export interface Transform {
   transformType: TransformType;
+
   a: number;
   t: number;
   m: number;

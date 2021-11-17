@@ -21,8 +21,14 @@
   <legend>Transformation</legend>
   <div class="transformation">
     <span>X axis:</span>
-    <app-transform></app-transform>
+    <app-transform
+      [predefinedTransforms]="predefinedTransforms"
+      [data]="xTransform"
+    ></app-transform>
     <span>Y axis:</span>
-    <app-transform></app-transform>
+    <app-transform
+      [predefinedTransforms]="predefinedTransforms"
+      [data]="yTransform"
+    ></app-transform>
   </div>
 </fieldset>

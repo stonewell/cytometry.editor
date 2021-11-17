@@ -14,12 +14,22 @@ export interface ExpFileGate {
   gateJson: string;
 }
 
+export interface ExpFileTransform {
+  transformName: string;
+  transformType: string;
+  parameterValues: any;
+  isPredefined: boolean;
+  channel: string;
+}
+
 export interface ExpFile {
   id: number;
   title: string;
   gates: ExpFileGate[];
   channels: ExpFileChannel[];
   plotMargin: GatePlotMargin;
+  predefinedTransforms: ExpFileTransform[];
+  defaultTransforms: ExpFileTransform[];
 }
 
 export interface GatePlotMargin {

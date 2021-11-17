@@ -9,17 +9,11 @@ import { TransformType, Transform } from '../shared/gate-types';
 })
 export class TransformComponent implements OnInit {
   rName: string;
+
   @Input() data: Transform;
+  @Input() predefinedTransforms: any;
 
   constructor() {
-    this.data = {
-      transformType: TransformType.none,
-      a: 0,
-      t: 0,
-      m: 0,
-      w: 0,
-      predefinedName: '',
-    };
   }
 
   ngOnInit(): void {

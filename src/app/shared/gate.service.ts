@@ -1,8 +1,20 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Observable, EMPTY } from 'rxjs';
 
-import { Point, Gate, gateFromJSON, gateToJSON } from './gate-types';
-import { ExpFile, FlowgateService, GatePlotMargin } from './flowgate.service';
+import {
+  Point,
+  Gate,
+  Transform,
+  TransformType,
+  gateFromJSON,
+  gateToJSON,
+} from './gate-types';
+import {
+  ExpFile,
+  FlowgateService,
+  GatePlotMargin,
+  ExpFileTransform,
+} from './flowgate.service';
 import { mergeAll, mergeMap, switchMap, filter, tap } from 'rxjs/operators';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -19,6 +31,7 @@ export class GateService {
   private gateInfo: any;
 
   gateParameters: string[] = [];
+  predefinedTransforms: string[] = [];
 
   private expFile: ExpFile;
 
@@ -45,6 +58,10 @@ export class GateService {
         if (this.gateParameters.length < 2) {
           this.gateParameters = [...this.gateParameters, ...['FSC-A', 'FSC-H']];
         }
+
+        this.predefinedTransforms = expFile.predefinedTransforms.map(
+          (t: ExpFileTransform) => t.transformName
+        );
 
         if (expFile.gates.length > 0) {
           console.log(expFile.gates[0].gateJson);
@@ -151,5 +168,48 @@ export class GateService {
       this.expFile,
       gateToJSON(this.rootGate)
     );
+  }
+
+  expFileTransformToTransform(expT: ExpFileTransform): Transform {
+    const v = expT.parameterValues;
+
+    return {
+      transformType: this.expFileTranformTypeToTransformType(expT),
+      a: v['a'] || 0,
+      t: v['t'] || 0,
+      m: v['m'] || 0,
+      w: v['w'] || 0,
+      predefinedName: expT.transformName,
+    };
+  }
+
+  getDefaultTransform(channel: string): Transform {
+    const t = this.expFile.defaultTransforms
+      .filter((t: ExpFileTransform) => {
+        console.log(`${JSON.stringify(t)} t:${t.channel}, ${channel}`);
+        return t.channel === channel;
+      })
+      .map((t: ExpFileTransform) => this.expFileTransformToTransform(t));
+
+    if (t.length > 0) return t[0];
+
+    return this.defaultTransform();
+  }
+
+  expFileTranformTypeToTransformType(expT: ExpFileTransform): TransformType {
+    return !expT.transformType || expT.isPredefined
+      ? TransformType.predefined
+      : (expT.transformType as TransformType);
+  }
+
+  defaultTransform(): Transform {
+    return {
+      transformType: TransformType.none,
+      a: 0,
+      t: 0,
+      m: 0,
+      w: 0,
+      predefinedName: '',
+    };
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
 import { GateService } from '../shared/gate.service';
+import { Transform } from '../shared/gate-types';
 
 @Component({
   selector: 'app-gate',
@@ -12,20 +13,29 @@ export class GateComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
 
   gateParameters: string[] = [];
+  predefinedTransforms: string[] = [];
 
   xParameter: string;
   yParameter: string;
   gateName: string;
 
+  xTransform: Transform;
+
+  yTransform: Transform;
+
   constructor(
     private readonly http: HttpClient,
     private readonly gateService: GateService
-  ) {}
+  ) {
+    this.xTransform = gateService.defaultTransform();
+    this.yTransform = gateService.defaultTransform();
+  }
 
   ngOnInit(): void {
     this.subscription.add(
       this.gateService.gateLoaded.subscribe((_) => {
         this.gateParameters = this.gateService.gateParameters;
+        this.predefinedTransforms = this.gateService.predefinedTransforms;
 
         this.onGateUpdated();
       })
@@ -65,6 +75,19 @@ export class GateComponent implements OnInit, OnDestroy {
     this.gateName = currentGate.name;
     this.xParameter = currentGate.x;
     this.yParameter = currentGate.y;
+
+    this.xTransform = Object.assign(
+      {},
+      currentGate.xTransform ||
+        this.gateService.getDefaultTransform(this.xParameter)
+    );
+    this.yTransform = Object.assign(
+      {},
+      currentGate.yTransform ||
+        this.gateService.getDefaultTransform(this.yParameter)
+    );
+
+    console.log(this.xTransform);
   }
 
   onNameUpdate(): void {
