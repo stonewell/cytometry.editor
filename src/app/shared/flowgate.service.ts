@@ -46,7 +46,7 @@ export class FlowgateService {
 
     return this.httpClient.post<any>(url, {
       expFile: expFile.id,
-      gates: JSON.parse(gatesJson)
+      gates: JSON.parse(gatesJson),
     });
   }
 }

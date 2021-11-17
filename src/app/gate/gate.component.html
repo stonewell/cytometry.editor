@@ -1,17 +1,28 @@
-<p>gate works!</p>
-<div class="gate">
-  <span>Name:</span>
-  <input type="input" [(ngModel)]="gateName" (input)="onNameUpdate()" />
-  <span>X axis:</span>
-  <select [(ngModel)]="xParameter" (change)="onUIUpdate()">
-    <option *ngFor="let param of gateParameters" [ngValue]="param">
-      {{ param }}
-    </option>
-  </select>
-  <span>Y axis:</span>
-  <select [(ngModel)]="yParameter" (change)="onUIUpdate()">
-    <option *ngFor="let param of gateParameters" [ngValue]="param">
-      {{ param }}
-    </option>
-  </select>
-</div>
+<fieldset>
+  <legend>Gate Info</legend>
+  <div class="gate">
+    <span>Name:</span>
+    <input type="input" [(ngModel)]="gateName" (input)="onNameUpdate()" />
+    <span>X axis:</span>
+    <select [(ngModel)]="xParameter" (change)="onUIUpdate()">
+      <option *ngFor="let param of gateParameters" [ngValue]="param">
+        {{ param }}
+      </option>
+    </select>
+    <span>Y axis:</span>
+    <select [(ngModel)]="yParameter" (change)="onUIUpdate()">
+      <option *ngFor="let param of gateParameters" [ngValue]="param">
+        {{ param }}
+      </option>
+    </select>
+  </div>
+</fieldset>
+<fieldset class="transform-fieldset">
+  <legend>Transformation</legend>
+  <div class="transformation">
+    <span>X axis:</span>
+    <app-transform></app-transform>
+    <span>Y axis:</span>
+    <app-transform></app-transform>
+  </div>
+</fieldset>

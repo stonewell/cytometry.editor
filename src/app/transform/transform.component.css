@@ -1,0 +1,27 @@
+.transform-type {
+  display: flex;
+  flex-direction: row;
+}
+
+.transform-detail {
+  margin-top: 6px;
+}
+
+.fixed-transform {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+}
+
+.fixed-transform > * {
+  margin-top: 6px;
+  margin-left: 8px;
+}
+
+.fixed-transform > span {
+  justify-content: center;
+  vetical-align: middle;
+}
+
+.predefined > p > select {
+  width: 100%;
+}

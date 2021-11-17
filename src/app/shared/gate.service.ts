@@ -113,10 +113,10 @@ export class GateService {
       x: this.gateParameters[0],
       y: this.gateParameters[1],
       points: [
-        {x: 250 / 600.0, y: 250 / 600.0},
-        {x: 350 / 600.0, y: 250 / 600.0},
-        {x: 350 / 600.0, y: 350 / 600.0},
-        {x: 250 / 600.0, y: 350 / 600.0},
+        { x: 250 / 600.0, y: 250 / 600.0 },
+        { x: 350 / 600.0, y: 250 / 600.0 },
+        { x: 350 / 600.0, y: 350 / 600.0 },
+        { x: 250 / 600.0, y: 350 / 600.0 },
       ],
       children: [],
       parent: this.rootGate,
@@ -150,6 +150,6 @@ export class GateService {
     return this.flowgateService.updateGatePlot(
       this.expFile,
       gateToJSON(this.rootGate)
-    )
+    );
   }
 }

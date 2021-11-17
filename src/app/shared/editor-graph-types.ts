@@ -93,7 +93,10 @@ export class EditorGraph extends Graph {
       this.onDoubleClick.bind(this)
     );
     this.graph.addListener(mx.mxEvent.CLICK, this.onClick.bind(this));
-    this.graph.addListener(mx.mxEvent.CELLS_MOVED, this.onCellsMoved.bind(this));
+    this.graph.addListener(
+      mx.mxEvent.CELLS_MOVED,
+      this.onCellsMoved.bind(this)
+    );
 
     this.graph.addMouseListener({
       mouseDown: this.onMouseDown.bind(this),
@@ -346,7 +349,10 @@ export class EditorGraph extends Graph {
     const plotWidth = gBox.width * (1 - plotMargin.left - plotMargin.right);
     const plotHeight = gBox.height * (1 - plotMargin.top - plotMargin.bottom);
 
-    return { x: (p.x - plotLeft) / plotWidth, y: (plotHeight - p.y + plotTop) / plotHeight };
+    return {
+      x: (p.x - plotLeft) / plotWidth,
+      y: (plotHeight - p.y + plotTop) / plotHeight,
+    };
   }
 
   plotPointToPoint(p: any) {
@@ -359,7 +365,10 @@ export class EditorGraph extends Graph {
     const plotWidth = gBox.width * (1 - plotMargin.left - plotMargin.right);
     const plotHeight = gBox.height * (1 - plotMargin.top - plotMargin.bottom);
 
-    return { x: p.x * plotWidth + plotLeft, y: (1 - p.y) * plotHeight + plotTop };
+    return {
+      x: p.x * plotWidth + plotLeft,
+      y: (1 - p.y) * plotHeight + plotTop,
+    };
   }
 
   onModelNotify(sender: any, evt: any) {

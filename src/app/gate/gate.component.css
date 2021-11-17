@@ -18,6 +18,10 @@
   display: inline-block;
 }
 
-.gate > div > button {
-  float: right;
+.transform-fieldset {
+  margin-top: 10px;
+}
+
+.transform-fieldset > div > app-transform {
+  margin-left: 20px;
 }

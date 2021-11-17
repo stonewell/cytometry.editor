@@ -14,6 +14,24 @@ export interface Gate {
   parent?: Gate;
 }
 
+export enum TransformType {
+  none = 'none',
+  linear = 'linear',
+  log = 'log',
+  logicle = 'logicle',
+  predefined = 'predefined',
+}
+
+export interface Transform {
+  transformType: TransformType;
+  a: number;
+  t: number;
+  m: number;
+  w: number;
+
+  predefinedName: string;
+}
+
 export function gateFromJSON(value: string): Gate {
   return gateFromJSONObject(JSON.parse(value), undefined);
 }

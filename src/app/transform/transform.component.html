@@ -1,0 +1,102 @@
+<div class="transform-type">
+  <label>
+    <input
+      type="radio"
+      [name]="rName"
+      [checked]="data.transformType === transformType.none"
+      (change)="onTransformTypeChange(transformType.none)"
+    />None
+  </label>
+  <label>
+    <input
+      type="radio"
+      [name]="rName"
+      [checked]="data.transformType === transformType.linear"
+      (change)="onTransformTypeChange(transformType.linear)"
+    />Linear
+  </label>
+  <label>
+    <input
+      type="radio"
+      [name]="rName"
+      [checked]="data.transformType === transformType.log"
+      (change)="onTransformTypeChange(transformType.log)"
+    />Log
+  </label>
+  <label>
+    <input
+      type="radio"
+      [name]="rName"
+      [checked]="data.transformType === transformType.logicle"
+      (change)="onTransformTypeChange(transformType.logicle)"
+    />Logicle
+  </label>
+  <label>
+    <input
+      type="radio"
+      [name]="rName"
+      [checked]="data.transformType === transformType.predefined"
+      (change)="onTransformTypeChange(transformType.predefined)"
+    />Predefined
+  </label>
+</div>
+<div class="transform-detail">
+  <container-element [ngSwitch]="data.transformType">
+    <div class="fixed-transform" *ngSwitchDefault>
+      <span
+        *ngIf="
+          data.transformType === transformType.linear ||
+          data.transformType === transformType.logicle
+        "
+        >A</span
+      >
+      <input
+        type="number"
+        max="1000"
+        *ngIf="
+          data.transformType === transformType.linear ||
+          data.transformType === transformType.logicle
+          "
+        [ngModel]="data.a"
+        />
+
+      <span
+        *ngIf="
+          data.transformType === transformType.log ||
+          data.transformType === transformType.logicle
+        "
+        >M</span
+      >
+      <input
+        type="number"
+        max="1000"
+        *ngIf="
+          data.transformType === transformType.log ||
+          data.transformType === transformType.logicle
+        "
+        [ngModel]="data.m"
+      />
+
+      <span *ngIf="data.transformType !== transformType.none">T</span>
+      <input
+        type="number"
+        max="1000"
+        *ngIf="data.transformType !== transformType.none"
+        [ngModel]="data.t"
+      />
+      <span *ngIf="data.transformType === transformType.logicle">W</span>
+      <input
+        type="number"
+        max="1000"
+        *ngIf="data.transformType === transformType.logicle"
+        [ngModel]="data.w"
+      />
+    </div>
+
+    <div class="predefined" *ngSwitchCase="transformType.predefined">
+      <p>
+        <select></select>
+      </p>
+    </div>
+  </container-element>
+</div>
