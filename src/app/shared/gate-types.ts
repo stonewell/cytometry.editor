@@ -73,3 +73,35 @@ export function gateToJSON(g: Gate): string {
 export function pointToJSON(p: any): string {
   return `{"x":${p.x}, "y":${p.y}}`;
 }
+
+export function validateTransform(t: Transform, errors: string[]): boolean {
+  switch(t.transformType) {
+    case TransformType.linear: {
+      if (t.t <= 0.0) errors.push('T must be positive.');
+      if (t.a < 0.0) errors.push('A must be non-negative.');
+      if (t.a > t.t) errors.push('A must be less than or equal to T.');
+    }
+      break;
+
+    case TransformType.log: {
+      if (t.t <= 0.0) errors.push('T must be positive.');
+      if (t.m <= 0.0) errors.push('M must be positive.');
+    }
+      break;
+
+    case TransformType.logicle: {
+      if (t.t <= 0.0) errors.push('T must be positive.');
+      if (t.m <= 0.0) errors.push('M must be positive.');
+      if (t.w < 0.0) errors.push('W must be non-negative.');
+      if (t.w > (t.m/2.0)) errors.push('W must be less than or equal M/2.');
+      if (t.a < -t.w) errors.push('A must be greater than or equal to -W.');
+      if (t.a > (t.m-2*t.w)) errors.push('A must be less than or equal to (M-2W).');
+    }
+      break;
+
+    default:
+      break;
+  }
+
+  return errors.length === 0;
+}

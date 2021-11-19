@@ -58,6 +58,7 @@
           data.transformType === transformType.logicle
         "
         [(ngModel)]="data.a"
+        (input)="onValueChange()"
       />
 
       <span
@@ -75,6 +76,7 @@
           data.transformType === transformType.logicle
         "
         [(ngModel)]="data.m"
+        (input)="onValueChange()"
       />
 
       <span *ngIf="data.transformType !== transformType.none">T</span>
@@ -83,6 +85,7 @@
         max="1000"
         *ngIf="data.transformType !== transformType.none"
         [(ngModel)]="data.t"
+        (input)="onValueChange()"
       />
       <span *ngIf="data.transformType === transformType.logicle">W</span>
       <input
@@ -90,12 +93,14 @@
         max="1000"
         *ngIf="data.transformType === transformType.logicle"
         [(ngModel)]="data.w"
+        (input)="onValueChange()"
       />
     </div>
 
     <div class="predefined" *ngSwitchCase="transformType.predefined">
       <p>
-        <select [(ngModel)]="data.predefinedName">
+        <select [(ngModel)]="data.predefinedName"
+                (change)="onValueChange()">
           <option *ngFor="let t of predefinedTransforms" [ngValue]="t">
             {{ t }}
           </option>
@@ -104,3 +109,6 @@
     </div>
   </container-element>
 </div>
+<p *ngIf="errors.length > 0">
+  <small *ngFor="let msg of errors"> <font color="red">{{ msg }}</font><br> </small>
+</p>

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
-import { TransformType, Transform } from '../shared/gate-types';
+import { TransformType, Transform, validateTransform } from '../shared/gate-types';
 
 @Component({
   selector: 'app-transform',
@@ -12,6 +12,8 @@ export class TransformComponent implements OnInit {
 
   @Input() data: Transform;
   @Input() predefinedTransforms: any;
+
+  errors: string[] = [];
 
   constructor() {
   }
@@ -26,5 +28,14 @@ export class TransformComponent implements OnInit {
 
   onTransformTypeChange(t: TransformType): void {
     this.data.transformType = t;
+
+    this.onValueChange();
+  }
+
+  onValueChange(): void {
+    this.errors = [];
+
+    if (!validateTransform(this.data, this.errors)) {
+    }
   }
 }
