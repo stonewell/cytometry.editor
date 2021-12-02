@@ -66,12 +66,8 @@ export class GateComponent implements OnInit, OnDestroy {
     currentGate.x = this.xParameter;
     currentGate.y = this.yParameter;
 
-    currentGate.xTransform = Object.assign(
-      {},
-      this.xTransform);
-    currentGate.yTransform = Object.assign(
-      {},
-      this.yTransform);
+    currentGate.xTransform = Object.assign({}, this.xTransform);
+    currentGate.yTransform = Object.assign({}, this.yTransform);
 
     this.gateService.notifyCurrentGateUpdated();
   }
