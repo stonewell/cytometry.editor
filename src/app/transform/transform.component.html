@@ -99,8 +99,7 @@
 
     <div class="predefined" *ngSwitchCase="transformType.predefined">
       <p>
-        <select [(ngModel)]="data.predefinedName"
-                (change)="onValueChange()">
+        <select [(ngModel)]="data.predefinedName" (change)="onValueChange()">
           <option *ngFor="let t of predefinedTransforms" [ngValue]="t">
             {{ t }}
           </option>
@@ -110,5 +109,8 @@
   </container-element>
 </div>
 <p *ngIf="errors.length > 0">
-  <small *ngFor="let msg of errors"> <font color="red">{{ msg }}</font><br> </small>
+  <small *ngFor="let msg of errors">
+    <font color="red">{{ msg }}</font
+    ><br />
+  </small>
 </p>

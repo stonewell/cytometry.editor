@@ -51,6 +51,8 @@ export function gateFromJSONObject(obj: any, parent: any) {
         return { x: p['x'], y: p['y'] };
       }) || [],
     children: [],
+    xTransform: transformFromJSONObject(obj['xTransform']),
+    yTransform: transformFromJSONObject(obj['yTransform']),
     parent: parent as Gate,
   };
 
@@ -67,7 +69,9 @@ export function gateToJSON(g: Gate): string {
     g.points?.map((p) => pointToJSON(p)).join(',') || ''
   }], "children":[${
     g.children?.map((c) => gateToJSON(c)).join(',') || ''
-  }], "plotKey":"${g.plotKey}"}`;
+  }], "plotKey":"${g.plotKey}", "xTransform":"${transformToJSON(
+    g.xTransform
+  )}", "yTransform":"${transformToJSON(g.yTransform)}"}`;
 }
 
 export function pointToJSON(p: any): string {
@@ -75,28 +79,32 @@ export function pointToJSON(p: any): string {
 }
 
 export function validateTransform(t: Transform, errors: string[]): boolean {
-  switch(t.transformType) {
-    case TransformType.linear: {
-      if (t.t <= 0.0) errors.push('T must be positive.');
-      if (t.a < 0.0) errors.push('A must be non-negative.');
-      if (t.a > t.t) errors.push('A must be less than or equal to T.');
-    }
+  switch (t.transformType) {
+    case TransformType.linear:
+      {
+        if (t.t <= 0.0) errors.push('T must be positive.');
+        if (t.a < 0.0) errors.push('A must be non-negative.');
+        if (t.a > t.t) errors.push('A must be less than or equal to T.');
+      }
       break;
 
-    case TransformType.log: {
-      if (t.t <= 0.0) errors.push('T must be positive.');
-      if (t.m <= 0.0) errors.push('M must be positive.');
-    }
+    case TransformType.log:
+      {
+        if (t.t <= 0.0) errors.push('T must be positive.');
+        if (t.m <= 0.0) errors.push('M must be positive.');
+      }
       break;
 
-    case TransformType.logicle: {
-      if (t.t <= 0.0) errors.push('T must be positive.');
-      if (t.m <= 0.0) errors.push('M must be positive.');
-      if (t.w < 0.0) errors.push('W must be non-negative.');
-      if (t.w > (t.m/2.0)) errors.push('W must be less than or equal M/2.');
-      if (t.a < -t.w) errors.push('A must be greater than or equal to -W.');
-      if (t.a > (t.m-2*t.w)) errors.push('A must be less than or equal to (M-2W).');
-    }
+    case TransformType.logicle:
+      {
+        if (t.t <= 0.0) errors.push('T must be positive.');
+        if (t.m <= 0.0) errors.push('M must be positive.');
+        if (t.w < 0.0) errors.push('W must be non-negative.');
+        if (t.w > t.m / 2.0) errors.push('W must be less than or equal M/2.');
+        if (t.a < -t.w) errors.push('A must be greater than or equal to -W.');
+        if (t.a > t.m - 2 * t.w)
+          errors.push('A must be less than or equal to (M-2W).');
+      }
       break;
 
     default:
@@ -104,4 +112,24 @@ export function validateTransform(t: Transform, errors: string[]): boolean {
   }
 
   return errors.length === 0;
+}
+
+export function transformFromJSONObject(obj: any): Transform | undefined {
+  if (!obj) return undefined;
+
+  return {
+    transformType: obj['transformType'] || TransformType.none,
+    a: obj['a'] || 0,
+    t: obj['t'] || 0,
+    m: obj['m'] || 0,
+    w: obj['w'] || 0,
+    predefinedName: obj['predefinedName'] || '',
+  };
+}
+
+export function transformToJSON(t: Transform | undefined): string {
+  if (!t)
+    return `{"tarnsformType":"none", "a":0, "t":0, "m":0, "w":0, "predefinedName":""}`;
+
+  return `{"tarnsformType":"${t.transformType}", "a":${t.a}, "t":${t.t}, "m":${t.m}, "w":${t.w}, "predefinedName":"${t.predefinedName}"}`;
 }

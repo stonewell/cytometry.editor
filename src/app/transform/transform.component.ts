@@ -1,6 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
-import { TransformType, Transform, validateTransform } from '../shared/gate-types';
+import {
+  TransformType,
+  Transform,
+  validateTransform,
+} from '../shared/gate-types';
 
 @Component({
   selector: 'app-transform',
@@ -15,8 +19,7 @@ export class TransformComponent implements OnInit {
 
   errors: string[] = [];
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit(): void {
     this.rName = uuidv4();
