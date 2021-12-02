@@ -69,9 +69,9 @@ export function gateToJSON(g: Gate): string {
     g.points?.map((p) => pointToJSON(p)).join(',') || ''
   }], "children":[${
     g.children?.map((c) => gateToJSON(c)).join(',') || ''
-  }], "plotKey":"${g.plotKey}", "xTransform":"${transformToJSON(
+  }], "plotKey":"${g.plotKey}", "xTransform":${transformToJSON(
     g.xTransform
-  )}", "yTransform":"${transformToJSON(g.yTransform)}"}`;
+  )}, "yTransform":${transformToJSON(g.yTransform)}}`;
 }
 
 export function pointToJSON(p: any): string {
@@ -107,6 +107,13 @@ export function validateTransform(t: Transform, errors: string[]): boolean {
       }
       break;
 
+    case TransformType.predefined:
+      {
+        if (t.predefinedName == '')
+          errors.push('Choose a predefined transform');
+      }
+      break;
+
     default:
       break;
   }
@@ -129,7 +136,7 @@ export function transformFromJSONObject(obj: any): Transform | undefined {
 
 export function transformToJSON(t: Transform | undefined): string {
   if (!t)
-    return `{"tarnsformType":"none", "a":0, "t":0, "m":0, "w":0, "predefinedName":""}`;
+    return `{"transformType":"none", "a":0, "t":0, "m":0, "w":0, "predefinedName":""}`;
 
-  return `{"tarnsformType":"${t.transformType}", "a":${t.a}, "t":${t.t}, "m":${t.m}, "w":${t.w}, "predefinedName":"${t.predefinedName}"}`;
+  return `{"transformType":"${t.transformType}", "a":${t.a}, "t":${t.t}, "m":${t.m}, "w":${t.w}, "predefinedName":"${t.predefinedName}"}`;
 }

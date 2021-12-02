@@ -54,6 +54,8 @@ export class FlowgateService {
   updateGatePlot(expFile: ExpFile, gatesJson: string): Observable<any> {
     const url = `/expFile/updateGatePlot`;
 
+    console.log(gatesJson);
+
     return this.httpClient.post<any>(url, {
       expFile: expFile.id,
       gates: JSON.parse(gatesJson),

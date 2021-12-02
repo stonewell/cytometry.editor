@@ -43,6 +43,18 @@ export class TransformComponent implements OnInit, OnChanges {
   onTransformTypeChange(t: TransformType): void {
     this.dataCopy.transformType = t;
 
+    if (t === TransformType.predefined) {
+      if (
+        !this.dataCopy.predefinedName ||
+        this.predefinedTransforms.indexOf(this.dataCopy.predefinedName) < 0
+      ) {
+        this.dataCopy.predefinedName =
+          this.predefinedTransforms.length > 0
+            ? this.predefinedTransforms[0]
+            : '';
+      }
+    }
+
     this.onValueChange();
   }
 
