@@ -24,13 +24,13 @@
     <app-transform
       [predefinedTransforms]="predefinedTransforms"
       [data]="xTransform"
-      (transformUpdated)="transformUpdated($event)"
+      (transformUpdated)="onUIUpdate()"
     ></app-transform>
     <span>Y axis:</span>
     <app-transform
       [predefinedTransforms]="predefinedTransforms"
       [data]="yTransform"
-      (transformUpdated)="transformUpdated($event)"
+      (transformUpdated)="onUIUpdate()"
     ></app-transform>
   </div>
 </fieldset>

@@ -66,6 +66,13 @@ export class GateComponent implements OnInit, OnDestroy {
     currentGate.x = this.xParameter;
     currentGate.y = this.yParameter;
 
+    currentGate.xTransform = Object.assign(
+      {},
+      this.xTransform);
+    currentGate.yTransform = Object.assign(
+      {},
+      this.yTransform);
+
     this.gateService.notifyCurrentGateUpdated();
   }
 
@@ -97,9 +104,5 @@ export class GateComponent implements OnInit, OnDestroy {
     currentGate.name = this.gateName;
 
     this.gateService.notifyCurrentGateUpdated('name');
-  }
-
-  transformUpdated(evt: any): void {
-    console.log('transform updated');
   }
 }
