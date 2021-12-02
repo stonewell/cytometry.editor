@@ -51,6 +51,8 @@ export function gateFromJSONObject(obj: any, parent: any) {
         return { x: p['x'], y: p['y'] };
       }) || [],
     children: [],
+    xTransform: transformFromJSONObject(obj['xTransform']),
+    yTransform: transformFromJSONObject(obj['yTransform']),
     parent: parent as Gate,
   };
 
@@ -67,7 +69,9 @@ export function gateToJSON(g: Gate): string {
     g.points?.map((p) => pointToJSON(p)).join(',') || ''
   }], "children":[${
     g.children?.map((c) => gateToJSON(c)).join(',') || ''
-  }], "plotKey":"${g.plotKey}"}`;
+  }], "plotKey":"${g.plotKey}", "xTransform":"${transformToJSON(
+    g.xTransform
+  )}", "yTransform":"${transformToJSON(g.yTransform)}"}`;
 }
 
 export function pointToJSON(p: any): string {
@@ -108,4 +112,24 @@ export function validateTransform(t: Transform, errors: string[]): boolean {
   }
 
   return errors.length === 0;
+}
+
+export function transformFromJSONObject(obj: any): Transform | undefined {
+  if (!obj) return undefined;
+
+  return {
+    transformType: obj['transformType'] || TransformType.none,
+    a: obj['a'] || 0,
+    t: obj['t'] || 0,
+    m: obj['m'] || 0,
+    w: obj['w'] || 0,
+    predefinedName: obj['predefinedName'] || '',
+  };
+}
+
+export function transformToJSON(t: Transform | undefined): string {
+  if (!t)
+    return `{"tarnsformType":"none", "a":0, "t":0, "m":0, "w":0, "predefinedName":""}`;
+
+  return `{"tarnsformType":"${t.transformType}", "a":${t.a}, "t":${t.t}, "m":${t.m}, "w":${t.w}, "predefinedName":"${t.predefinedName}"}`;
 }
