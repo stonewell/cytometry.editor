@@ -98,4 +98,8 @@ export class GateComponent implements OnInit, OnDestroy {
 
     this.gateService.notifyCurrentGateUpdated('name');
   }
+
+  transformUpdated(evt: any): void {
+    console.log('transform updated');
+  }
 }

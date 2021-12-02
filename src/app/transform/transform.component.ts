@@ -1,22 +1,36 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
-import { TransformType, Transform, validateTransform } from '../shared/gate-types';
+import {
+  TransformType,
+  Transform,
+  validateTransform,
+} from '../shared/gate-types';
 
 @Component({
   selector: 'app-transform',
   templateUrl: './transform.component.html',
   styleUrls: ['./transform.component.css'],
 })
-export class TransformComponent implements OnInit {
+export class TransformComponent implements OnInit, OnChanges {
   rName: string;
 
   @Input() data: Transform;
+  dataCopy: Transform;
   @Input() predefinedTransforms: any;
+
+  @Output() transformUpdated: EventEmitter<any> = new EventEmitter();
 
   errors: string[] = [];
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit(): void {
     this.rName = uuidv4();
@@ -27,7 +41,7 @@ export class TransformComponent implements OnInit {
   }
 
   onTransformTypeChange(t: TransformType): void {
-    this.data.transformType = t;
+    this.dataCopy.transformType = t;
 
     this.onValueChange();
   }
@@ -35,7 +49,14 @@ export class TransformComponent implements OnInit {
   onValueChange(): void {
     this.errors = [];
 
-    if (!validateTransform(this.data, this.errors)) {
+    if (validateTransform(this.dataCopy, this.errors)) {
+      Object.assign(this.data, this.dataCopy);
+
+      this.transformUpdated.emit(null);
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.dataCopy = Object.assign({}, this.data);
   }
 }
