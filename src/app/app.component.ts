@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'editor';
+  gateEditorSessionId = 'session-id';
 
   constructor(
     private readonly gateService: GateService,
