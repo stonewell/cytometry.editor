@@ -47,9 +47,9 @@ export class GateService {
       });
   }
 
-  loadGate(expFileId: string): void {
+  loadGate(expFileId: string, gateEditSession: string): void {
     this.flowgateService
-      .getFileInfoWithGateTree(expFileId)
+      .getFileInfoWithGateTree(expFileId, gateEditSession)
       .subscribe((expFile) => {
         this.expFile = expFile;
 
@@ -211,5 +211,9 @@ export class GateService {
       w: 0,
       predefinedName: '',
     };
+  }
+
+  gateEditSession(): string {
+    return this.expFile.gateEditSession;
   }
 }

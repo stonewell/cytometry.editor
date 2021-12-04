@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GateService } from './shared/gate.service';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -11,17 +12,28 @@ export class AppComponent implements OnInit {
   title = 'editor';
   gateEditorSessionId = 'session-id';
 
+  subscription: Subscription = new Subscription();
+
   constructor(
     private readonly gateService: GateService,
     private activeRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.subscription.add(
+      this.gateService.gateLoaded.subscribe((_) => {
+        this.gateEditorSessionId = this.gateService.gateEditSession();
+
+        console.log(`gate edit session:${this.gateEditorSessionId}`);
+      })
+    );
+
     this.activeRoute.queryParams.subscribe((params) => {
       const expFile = params['expFile'];
+      this.gateEditorSessionId = params['gateEditSession'];
 
       if (expFile) {
-        this.gateService.loadGate(expFile);
+        this.gateService.loadGate(expFile, this.gateEditorSessionId);
       }
     });
   }

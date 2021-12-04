@@ -30,6 +30,7 @@ export interface ExpFile {
   plotMargin: GatePlotMargin;
   predefinedTransforms: ExpFileTransform[];
   defaultTransforms: ExpFileTransform[];
+  gateEditSession: string;
 }
 
 export interface GatePlotMargin {
@@ -45,8 +46,8 @@ export interface GatePlotMargin {
 export class FlowgateService {
   constructor(private readonly httpClient: HttpClient) {}
 
-  getFileInfoWithGateTree(id: string): Observable<ExpFile> {
-    const url = `/expFile/renderFcsInfoWithGateTree/${id}`;
+  getFileInfoWithGateTree(id: string, gateEditSession: string): Observable<ExpFile> {
+    const url = `/expFile/renderFcsInfoWithGateTree/${id}?gateEditSession=${gateEditSession}`;
 
     return this.httpClient.get<ExpFile>(url);
   }
@@ -54,10 +55,9 @@ export class FlowgateService {
   updateGatePlot(expFile: ExpFile, gatesJson: string): Observable<any> {
     const url = `/expFile/updateGatePlot`;
 
-    console.log(gatesJson);
-
     return this.httpClient.post<any>(url, {
       expFile: expFile.id,
+      gateEditSession: expFile.gateEditSession,
       gates: JSON.parse(gatesJson),
     });
   }
