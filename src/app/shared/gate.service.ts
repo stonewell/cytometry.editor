@@ -47,7 +47,7 @@ export class GateService {
       });
   }
 
-  loadGate(expFileId: string, gateEditSession: string): void {
+  loadGate(expFileId: string, gateEditSession: string, newGate: boolean): void {
     this.flowgateService
       .getFileInfoWithGateTree(expFileId, gateEditSession)
       .subscribe((expFile) => {
@@ -63,7 +63,7 @@ export class GateService {
           (t: ExpFileTransform) => t.transformName
         );
 
-        if (expFile.gate) {
+        if (expFile.gate && !newGate) {
           console.log(expFile.gate.gateJson);
           this.rootGate = gateFromJSON(expFile.gate.gateJson);
         } else {

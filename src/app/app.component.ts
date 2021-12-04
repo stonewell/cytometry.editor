@@ -33,8 +33,10 @@ export class AppComponent implements OnInit {
       this.expFileId = params['expFile'];
       this.gateEditorSessionId = params['gateEditSession'];
 
+      const newGate = params['newGate'] === '1';
+
       if (this.expFileId) {
-        this.gateService.loadGate(this.expFileId, this.gateEditorSessionId);
+        this.gateService.loadGate(this.expFileId, this.gateEditorSessionId, newGate);
       }
     });
   }
