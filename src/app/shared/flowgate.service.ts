@@ -25,7 +25,7 @@ export interface ExpFileTransform {
 export interface ExpFile {
   id: number;
   title: string;
-  gates: ExpFileGate[];
+  gate: ExpFileGate;
   channels: ExpFileChannel[];
   plotMargin: GatePlotMargin;
   predefinedTransforms: ExpFileTransform[];

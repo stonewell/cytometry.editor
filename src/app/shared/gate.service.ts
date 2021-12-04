@@ -63,9 +63,9 @@ export class GateService {
           (t: ExpFileTransform) => t.transformName
         );
 
-        if (expFile.gates.length > 0) {
-          console.log(expFile.gates[0].gateJson);
-          this.rootGate = gateFromJSON(expFile.gates[0].gateJson);
+        if (expFile.gate) {
+          console.log(expFile.gate.gateJson);
+          this.rootGate = gateFromJSON(expFile.gate.gateJson);
         } else {
           this.rootGate = this.createDefaultGate();
         }

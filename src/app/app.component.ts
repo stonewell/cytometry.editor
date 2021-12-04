@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 export class AppComponent implements OnInit {
   title = 'editor';
   gateEditorSessionId = 'session-id';
+  expFileId = 'expFileId';
 
   subscription: Subscription = new Subscription();
 
@@ -29,11 +30,11 @@ export class AppComponent implements OnInit {
     );
 
     this.activeRoute.queryParams.subscribe((params) => {
-      const expFile = params['expFile'];
+      this.expFileId = params['expFile'];
       this.gateEditorSessionId = params['gateEditSession'];
 
-      if (expFile) {
-        this.gateService.loadGate(expFile, this.gateEditorSessionId);
+      if (this.expFileId) {
+        this.gateService.loadGate(this.expFileId, this.gateEditorSessionId);
       }
     });
   }
