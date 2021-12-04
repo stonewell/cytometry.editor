@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export interface Point {
   x: number;
   y: number;
@@ -45,7 +47,7 @@ export function gateFromJSONObject(obj: any, parent: any) {
     customName: obj['customName'] === 1 ? true : false,
     x: obj['x'],
     y: obj['y'],
-    plotKey: obj['ployKey'],
+    plotKey: obj['plotKey'],
     points:
       obj['points']?.map((p: any) => {
         return { x: p['x'], y: p['y'] };
@@ -59,6 +61,8 @@ export function gateFromJSONObject(obj: any, parent: any) {
   gate.children =
     obj['children']?.map((c: any) => gateFromJSONObject(c, gate)) || [];
 
+  if (!gate.plotKey || gate.plotKey === 'undefined')
+    gate.plotKey = uuidv4();
   return gate;
 }
 
