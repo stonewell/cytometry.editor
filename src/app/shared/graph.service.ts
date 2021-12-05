@@ -145,18 +145,18 @@ export class GraphService {
 
     style[mx.mxConstants.STYLE_RESIZABLE] = '0';
 
-    style[mx.mxConstants.STYLE_GRADIENTCOLOR] = '#7d85df';
-    style[mx.mxConstants.STYLE_STROKECOLOR] = '#5d65df';
-    style[mx.mxConstants.STYLE_FILLCOLOR] = '#adc5ff';
+    // style[mx.mxConstants.STYLE_GRADIENTCOLOR] = '#7d85df';
+    style[mx.mxConstants.STYLE_STROKECOLOR] = '#000000';
+    // style[mx.mxConstants.STYLE_FILLCOLOR] = '#adc5ff';
 
     style[mx.mxConstants.STYLE_FONTCOLOR] = '#1d258f';
     style[mx.mxConstants.STYLE_FONTFAMILY] = 'Verdana';
     style[mx.mxConstants.STYLE_FONTSIZE] = '12';
     style[mx.mxConstants.STYLE_FONTSTYLE] = '1';
 
-    style[mx.mxConstants.STYLE_SHADOW] = '1';
+    style[mx.mxConstants.STYLE_SHADOW] = '0';
     style[mx.mxConstants.STYLE_ROUNDED] = '1';
-    style[mx.mxConstants.STYLE_GLASS] = '1';
+    style[mx.mxConstants.STYLE_GLASS] = '0';
 
     // Sets the default style for edges
     style = graph.getStylesheet().getDefaultEdgeStyle();
