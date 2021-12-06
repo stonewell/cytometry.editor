@@ -130,8 +130,8 @@ export class GraphService {
       return !cell.isEdge();
     };
 
-    // Disables tooltips on touch devices
-    graph.setTooltips(!mx.mxClient.IS_TOUCH);
+    // Disables tooltips
+    graph.setTooltips(false);
 
     mx.mxConstants.VERTEX_SELECTION_STROKEWIDTH = 0.1;
 

@@ -125,6 +125,6 @@ export class EditorComponent implements OnInit, OnDestroy {
     const currentGate = this.gateService.getCurrentGate();
     this.canvasBackgroundPlotKey = `/expFile/renderGatePlot?plotKey=${
       currentGate.plotKey
-    }&v=${new Date().getTime()}`;
+    }&gateEditSession=${this.gateService.gateEditSession()}&v=${new Date().getTime()}`;
   }
 }
