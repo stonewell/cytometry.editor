@@ -196,6 +196,19 @@ export class GateService {
     return this.defaultTransform();
   }
 
+  getAutoTransform(channel: string): Transform {
+    const t = this.expFile.autoTransforms
+      .filter((t: ExpFileTransform) => {
+        console.log(`${JSON.stringify(t)} t:${t.channel}, ${channel}`);
+        return t.channel === channel;
+      })
+      .map((t: ExpFileTransform) => this.expFileTransformToTransform(t));
+
+    if (t.length > 0) return t[0];
+
+    return this.defaultTransform();
+  }
+
   expFileTranformTypeToTransformType(expT: ExpFileTransform): TransformType {
     return !expT.transformType || expT.isPredefined
       ? TransformType.predefined

@@ -11,6 +11,14 @@
     <input
       type="radio"
       [name]="rName"
+      [checked]="dataCopy.transformType === transformType.auto"
+      (change)="onTransformTypeChange(transformType.auto)"
+    />Auto
+  </label>
+  <label>
+    <input
+      type="radio"
+      [name]="rName"
       [checked]="dataCopy.transformType === transformType.linear"
       (change)="onTransformTypeChange(transformType.linear)"
     />Linear
@@ -79,11 +87,11 @@
         (input)="onValueChange()"
       />
 
-      <span *ngIf="dataCopy.transformType !== transformType.none">T</span>
+      <span *ngIf="dataCopy.transformType !== transformType.none && dataCopy.transformType !== transformType.auto">T</span>
       <input
         type="number"
         max="1000"
-        *ngIf="dataCopy.transformType !== transformType.none"
+        *ngIf="dataCopy.transformType !== transformType.none && dataCopy.transformType !== transformType.auto"
         [(ngModel)]="dataCopy.t"
         (input)="onValueChange()"
       />

@@ -24,6 +24,7 @@ export enum TransformType {
   log = 'log',
   logicle = 'logicle',
   predefined = 'predefined',
+  auto = 'auto',
 }
 
 export interface Transform {

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
 import { GateService } from '../shared/gate.service';
-import { Transform } from '../shared/gate-types';
+import { Transform, TransformType } from '../shared/gate-types';
 
 @Component({
   selector: 'app-gate',
@@ -69,6 +69,8 @@ export class GateComponent implements OnInit, OnDestroy {
     currentGate.xTransform = Object.assign({}, this.xTransform);
     currentGate.yTransform = Object.assign({}, this.yTransform);
 
+    this.updateAutoTransform();
+
     this.gateService.notifyCurrentGateUpdated();
   }
 
@@ -90,7 +92,11 @@ export class GateComponent implements OnInit, OnDestroy {
         this.gateService.getDefaultTransform(this.yParameter)
     );
 
+    this.updateAutoTransform();
+
     console.log(this.xTransform);
+    console.log(this.yTransform);
+    console.log(`${JSON.stringify(currentGate)}`);
   }
 
   onNameUpdate(): void {
@@ -100,5 +106,31 @@ export class GateComponent implements OnInit, OnDestroy {
     currentGate.name = this.gateName;
 
     this.gateService.notifyCurrentGateUpdated('name');
+  }
+
+  updateAutoTransform(): void {
+    const currentGate = this.gateService.getCurrentGate();
+
+    //should find the right auto transformation for x,y
+    if (this.xTransform.transformType === TransformType.auto) {
+      this.xTransform = Object.assign(
+        {},
+        this.gateService.getAutoTransform(this.xParameter)
+      );
+
+      if (currentGate.xTransform) {
+        currentGate.xTransform = Object.assign({}, this.xTransform);
+      }
+    }
+    if (this.yTransform.transformType === TransformType.auto) {
+      this.yTransform = Object.assign(
+        {},
+        this.gateService.getAutoTransform(this.yParameter)
+      );
+      if (currentGate.yTransform) {
+        currentGate.yTransform = Object.assign({}, this.yTransform);
+      }
+    }
+
   }
 }

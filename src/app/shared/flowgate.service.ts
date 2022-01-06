@@ -30,6 +30,7 @@ export interface ExpFile {
   plotMargin: GatePlotMargin;
   predefinedTransforms: ExpFileTransform[];
   defaultTransforms: ExpFileTransform[];
+  autoTransforms: ExpFileTransform[];
   gateEditSession: string;
 }
 
