@@ -139,6 +139,8 @@ export class GateService {
       parent: this.rootGate,
       customName: false,
       plotKey: uuidv4(),
+      xTransform: this.getDefaultTransform(this.gateParameters[0]),
+      yTransform: this.getDefaultTransform(this.gateParameters[1]),
     };
   }
 
