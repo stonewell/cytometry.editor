@@ -181,8 +181,10 @@ export class GraphService {
     const layout = new mx.mxCompactTreeLayout(graph, true, false);
     layout.useBoundingBox = false;
     layout.edgeRouting = false;
-    layout.levelDistance = 60;
+    layout.levelDistance = 16;
     layout.nodeDistance = 16;
+    layout.moveTree = true;
+    layout.visited = true;
 
     // Allows the layout to move cells even though cells
     // aren't movable in the graph

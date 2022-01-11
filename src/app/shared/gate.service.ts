@@ -80,14 +80,6 @@ export class GateService {
       });
   }
 
-  getGateInfo(): any {
-    return this.gateInfo;
-  }
-
-  getGatePlotUri(gate: Gate): string {
-    return '';
-  }
-
   getGatePlotMargin(): GatePlotMargin {
     return this.expFile.plotMargin;
   }
@@ -230,5 +222,9 @@ export class GateService {
 
   gateEditSession(): string {
     return this.expFile.gateEditSession;
+  }
+
+  expFileId(): string {
+    return `${this.expFile.id}`
   }
 }

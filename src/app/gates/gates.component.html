@@ -16,7 +16,9 @@ Gating Method:
   />DAFi
 </label>
 
-<button class="btn left-margin">Reset</button>
-<button class="btn left-margin">New Gate</button>
+<button class="btn left-margin" (click)="onGateResetClicked()"
+        [disabled]="!gateLoaded">Reset</button>
+<button class="btn left-margin" (click)="onNewGateClicked()"
+        [disabled]="!gateLoaded">New Gate</button>
 
 <div #canvas class="canvas"></div>

@@ -25,6 +25,8 @@ export class GatesComponent implements OnInit, OnDestroy {
 
   graph: GateGraph;
 
+  gateLoaded: boolean = false;
+
   constructor(
     private readonly container: ElementRef,
     private readonly graphService: GraphService,
@@ -48,11 +50,18 @@ export class GatesComponent implements OnInit, OnDestroy {
   }
 
   onGateLoaded(): void {
-    this.graph = this.graphService.createGateGraph(
-      this.graphCanvas.nativeElement
-    );
+    if (this.graph) {
+      this.graph.clear();
+    }
+    else {
+      this.graph = this.graphService.createGateGraph(
+        this.graphCanvas.nativeElement
+      );
+    }
 
     this.graph.addRoot();
+
+    this.gateLoaded = true;
   }
 
   ngOnDestroy(): void {
@@ -78,5 +87,19 @@ export class GatesComponent implements OnInit, OnDestroy {
     }
 
     return GatingMethod.dafi;
+  }
+
+  onGateResetClicked(): void {
+    this.gateLoaded = false;
+    const expFileId = this.gateService.expFileId();
+
+    this.gateService.loadGate(expFileId, '', false);
+  }
+
+  onNewGateClicked(): void {
+    this.gateLoaded = false;
+    const expFileId = this.gateService.expFileId();
+
+    this.gateService.loadGate(expFileId, '', true);
   }
 }

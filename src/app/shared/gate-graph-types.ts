@@ -242,6 +242,7 @@ export class GateGraph extends Graph {
     this.rootGateVertex.geometry.y = 10;
 
     this.selectCell(this.rootGateVertex);
+    this.layout.adjustParents();
   }
 
   addGateToGraph(gate: Gate, parentVertex: any): any {
@@ -274,8 +275,8 @@ export class GateGraph extends Graph {
       this.root,
       vertexId,
       gate.name,
-      0,
-      0,
+      10,
+      10,
       0,
       0
     );
@@ -331,5 +332,13 @@ export class GateGraph extends Graph {
         }
       }
     }
+  }
+
+  clear(): void {
+    super.clear();
+    this.layout.execute(this.root);
+    this.layout.adjustParents();
+    this.layout.moveTree = true;
+    this.layout.visited = true;
   }
 }
