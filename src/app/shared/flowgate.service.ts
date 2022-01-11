@@ -47,7 +47,10 @@ export interface GatePlotMargin {
 export class FlowgateService {
   constructor(private readonly httpClient: HttpClient) {}
 
-  getFileInfoWithGateTree(id: string, gateEditSession: string): Observable<ExpFile> {
+  getFileInfoWithGateTree(
+    id: string,
+    gateEditSession: string
+  ): Observable<ExpFile> {
     const url = `/expFile/renderFcsInfoWithGateTree/${id}?gateEditSession=${gateEditSession}`;
 
     return this.httpClient.get<ExpFile>(url);

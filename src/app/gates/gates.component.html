@@ -1,1 +1,14 @@
+Gating Method:
+<label> <input type="radio" name="gates-type"
+               [checked] = "currentGatingMethod === gatingMethod.manual"
+               (change)="onGatingMethodChange(gatingMethod.manual)"
+               />Manual </label>
+<label> <input type="radio" name="gates-type"
+               [checked] = "currentGatingMethod === gatingMethod.dafi"
+               (change)="onGatingMethodChange(gatingMethod.dafi)"
+               />DAFi </label>
+
+<button class="btn left-margin">Reset</button>
+<button class="btn left-margin">New Gate</button>
+
 <div #canvas class="canvas"></div>

@@ -36,7 +36,11 @@ export class AppComponent implements OnInit {
       const newGate = params['newGate'] === '1';
 
       if (this.expFileId) {
-        this.gateService.loadGate(this.expFileId, this.gateEditorSessionId, newGate);
+        this.gateService.loadGate(
+          this.expFileId,
+          this.gateEditorSessionId,
+          newGate
+        );
       }
     });
   }

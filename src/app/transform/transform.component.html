@@ -87,11 +87,20 @@
         (input)="onValueChange()"
       />
 
-      <span *ngIf="dataCopy.transformType !== transformType.none && dataCopy.transformType !== transformType.auto">T</span>
+      <span
+        *ngIf="
+          dataCopy.transformType !== transformType.none &&
+          dataCopy.transformType !== transformType.auto
+        "
+        >T</span
+      >
       <input
         type="number"
         max="1000"
-        *ngIf="dataCopy.transformType !== transformType.none && dataCopy.transformType !== transformType.auto"
+        *ngIf="
+          dataCopy.transformType !== transformType.none &&
+          dataCopy.transformType !== transformType.auto
+        "
         [(ngModel)]="dataCopy.t"
         (input)="onValueChange()"
       />

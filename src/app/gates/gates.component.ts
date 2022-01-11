@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { GraphService } from '../shared/graph.service';
 import { GateGraph } from '../shared/gate-graph-types';
 import { GateService } from '../shared/gate.service';
+import { GatingMethod } from '../shared/gate-types';
 
 @Component({
   selector: 'app-gates',
@@ -61,4 +62,22 @@ export class GatesComponent implements OnInit, OnDestroy {
   onGateNameUpdated(): void {
     this.graph.updateCurrentGateLabel();
   }
+
+  get gatingMethod(): typeof GatingMethod {
+    return GatingMethod;
+  }
+
+  onGatingMethodChange(gm: GatingMethod): void {
+    this.gateService.getRootGate().gatingMethod = gm;
+    this.gateService.notifyCurrentGateUpdated('gatingMethod');
+  }
+
+  get currentGatingMethod(): GatingMethod {
+    if (this.gateService.getRootGate()) {
+      return this.gateService.getRootGate().gatingMethod || GatingMethod.dafi;
+    }
+
+    return GatingMethod.dafi;
+  }
+
 }

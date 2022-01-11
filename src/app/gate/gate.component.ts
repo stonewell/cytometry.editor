@@ -96,7 +96,6 @@ export class GateComponent implements OnInit, OnDestroy {
 
     console.log(this.xTransform);
     console.log(this.yTransform);
-    console.log(`${JSON.stringify(currentGate)}`);
   }
 
   onNameUpdate(): void {
@@ -131,6 +130,5 @@ export class GateComponent implements OnInit, OnDestroy {
         currentGate.yTransform = Object.assign({}, this.yTransform);
       }
     }
-
   }
 }

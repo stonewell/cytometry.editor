@@ -5,6 +5,11 @@ export interface Point {
   y: number;
 }
 
+export enum GatingMethod {
+  manual = 'manual',
+  dafi = 'DAFi',
+}
+
 export interface Gate {
   name: string;
   customName: boolean;
@@ -16,6 +21,7 @@ export interface Gate {
   parent?: Gate;
   xTransform?: Transform;
   yTransform?: Transform;
+  gatingMethod?: GatingMethod;
 }
 
 export enum TransformType {
@@ -57,13 +63,17 @@ export function gateFromJSONObject(obj: any, parent: any) {
     xTransform: transformFromJSONObject(obj['xTransform']),
     yTransform: transformFromJSONObject(obj['yTransform']),
     parent: parent as Gate,
+    gatingMethod: obj['gatingMethod'],
   };
 
   gate.children =
     obj['children']?.map((c: any) => gateFromJSONObject(c, gate)) || [];
 
-  if (!gate.plotKey || gate.plotKey === 'undefined')
-    gate.plotKey = uuidv4();
+  if (!gate.plotKey || gate.plotKey === 'undefined') gate.plotKey = uuidv4();
+
+  if (!gate.gatingMethod)
+    gate.gatingMethod = GatingMethod.dafi;
+
   return gate;
 }
 
@@ -76,7 +86,9 @@ export function gateToJSON(g: Gate): string {
     g.children?.map((c) => gateToJSON(c)).join(',') || ''
   }], "plotKey":"${g.plotKey}", "xTransform":${transformToJSON(
     g.xTransform
-  )}, "yTransform":${transformToJSON(g.yTransform)}}`;
+  )}, "yTransform":${transformToJSON(g.yTransform)},"gatingMethod":"${
+    g.gatingMethod
+  }"}`;
 }
 
 export function pointToJSON(p: any): string {
