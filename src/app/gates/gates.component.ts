@@ -52,8 +52,7 @@ export class GatesComponent implements OnInit, OnDestroy {
   onGateLoaded(): void {
     if (this.graph) {
       this.graph.clear();
-    }
-    else {
+    } else {
       this.graph = this.graphService.createGateGraph(
         this.graphCanvas.nativeElement
       );

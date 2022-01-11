@@ -225,6 +225,6 @@ export class GateService {
   }
 
   expFileId(): string {
-    return `${this.expFile.id}`
+    return `${this.expFile.id}`;
   }
 }
