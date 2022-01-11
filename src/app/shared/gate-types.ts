@@ -71,8 +71,7 @@ export function gateFromJSONObject(obj: any, parent: any) {
 
   if (!gate.plotKey || gate.plotKey === 'undefined') gate.plotKey = uuidv4();
 
-  if (!gate.gatingMethod)
-    gate.gatingMethod = GatingMethod.dafi;
+  if (!gate.gatingMethod) gate.gatingMethod = GatingMethod.dafi;
 
   return gate;
 }

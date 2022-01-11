@@ -79,5 +79,4 @@ export class GatesComponent implements OnInit, OnDestroy {
 
     return GatingMethod.dafi;
   }
-
 }
