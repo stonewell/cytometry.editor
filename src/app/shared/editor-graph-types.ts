@@ -10,7 +10,12 @@ import {
   mxUndoManager,
 } from 'mxgraph';
 
-import { isInside, getBoundBox, getVertexPolygon, vertexToPoint } from './polygon';
+import {
+  isInside,
+  getBoundBox,
+  getVertexPolygon,
+  vertexToPoint,
+} from './polygon';
 import { Vertex, Cell, Graph, transactionEdit } from './graph-types';
 import { GateService } from './gate.service';
 
@@ -411,8 +416,7 @@ export class EditorGraph extends Graph {
   }
 
   rebuildRectangle(cell: any, dx: number, dy: number): void {
-    if (this.isRebuildingRectangle)
-      return;
+    if (this.isRebuildingRectangle) return;
 
     this.isRebuildingRectangle = true;
 
@@ -444,8 +448,8 @@ export class EditorGraph extends Graph {
 
     const pt2 = vertexToPoint(v2);
 
-    this.moveVertexTo(vNext, {x: pt2.x, y: pt.y});
-    this.moveVertexTo(vNext2, {x: pt.x, y: pt2.y});
+    this.moveVertexTo(vNext, { x: pt2.x, y: pt.y });
+    this.moveVertexTo(vNext2, { x: pt.x, y: pt2.y });
 
     this.isRebuildingRectangle = false;
   }
@@ -454,9 +458,6 @@ export class EditorGraph extends Graph {
   moveVertexTo(v: any, pt: any): void {
     const ptOld = vertexToPoint(v);
 
-    this.graph.moveCells([v.native],
-                         pt.x - ptOld.x,
-                         pt.y - ptOld.y,
-                         false);
+    this.graph.moveCells([v.native], pt.x - ptOld.x, pt.y - ptOld.y, false);
   }
 }
