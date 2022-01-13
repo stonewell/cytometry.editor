@@ -125,7 +125,7 @@ function checkInside(polygon: any, n: any, p: any) {
   return count % 2 == 1; // Same as (count%2 == 1)
 }
 
-function vertexToPoint(vertex: any) {
+export function vertexToPoint(vertex: any) {
   const state = vertex.getState();
 
   if (state === null) {

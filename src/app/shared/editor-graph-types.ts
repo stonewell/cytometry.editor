@@ -10,7 +10,7 @@ import {
   mxUndoManager,
 } from 'mxgraph';
 
-import { isInside, getBoundBox, getVertexPolygon } from './polygon';
+import { isInside, getBoundBox, getVertexPolygon, vertexToPoint } from './polygon';
 import { Vertex, Cell, Graph, transactionEdit } from './graph-types';
 import { GateService } from './gate.service';
 
@@ -74,6 +74,7 @@ export class EditorGraph extends Graph {
   isMoving: boolean = false;
   isCellMoved: boolean = false;
   lastMousePt: any;
+  isRebuildingRectangle: boolean = false;
 
   originPanningTrigger: any;
 
@@ -203,6 +204,13 @@ export class EditorGraph extends Graph {
 
   onCellsMoved(sender: any, evt: any) {
     this.isCellMoved = !this.isMoving;
+
+    if (this.isCellMoved && this.gateService.isDAFiGating()) {
+      const cell = evt.getProperty('cells')[0];
+      const dx = evt.getProperty('dx');
+      const dy = evt.getProperty('dy');
+      this.rebuildRectangle(cell, dx, dy);
+    }
   }
 
   @transactionEdit()
@@ -397,7 +405,58 @@ export class EditorGraph extends Graph {
     this.isCellMoved = false;
 
     this.lastMousePt = undefined;
+    this.isRebuildingRectangle = false;
 
     super.clear();
+  }
+
+  rebuildRectangle(cell: any, dx: number, dy: number): void {
+    if (this.isRebuildingRectangle)
+      return;
+
+    this.isRebuildingRectangle = true;
+
+    const v = cell['VERTEX'];
+
+    //find the oppsite vertex
+    const vNext = v.e1.v1 === v ? v.e1.v2 : v.e1.v1;
+    const vNext2 = v.e2.v1 === v ? v.e2.v2 : v.e2.v1;
+
+    let v2 = undefined;
+
+    if (vNext.e1.v1 === v || vNext.e1.v2 === v) {
+      if (vNext.e2.v1 === vNext) {
+        v2 = vNext.e2.v2;
+      } else {
+        v2 = vNext.e2.v1;
+      }
+    } else {
+      if (vNext.e1.v1 === vNext) {
+        v2 = vNext.e1.v2;
+      } else {
+        v2 = vNext.e1.v1;
+      }
+    }
+
+    const pt = vertexToPoint(v);
+    pt.x += dx;
+    pt.y += dy;
+
+    const pt2 = vertexToPoint(v2);
+
+    this.moveVertexTo(vNext, {x: pt2.x, y: pt.y});
+    this.moveVertexTo(vNext2, {x: pt.x, y: pt2.y});
+
+    this.isRebuildingRectangle = false;
+  }
+
+  @transactionEdit()
+  moveVertexTo(v: any, pt: any): void {
+    const ptOld = vertexToPoint(v);
+
+    this.graph.moveCells([v.native],
+                         pt.x - ptOld.x,
+                         pt.y - ptOld.y,
+                         false);
   }
 }
