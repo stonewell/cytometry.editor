@@ -57,9 +57,13 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   onGateLoaded(): void {
-    this.graph = this.graphService.createEditorGraph(
-      this.graphCanvas.nativeElement
-    );
+    if (this.graph) {
+      this.graph.clear();
+    } else {
+      this.graph = this.graphService.createEditorGraph(
+        this.graphCanvas.nativeElement
+      );
+    }
 
     this.loadCurrentGate();
   }
@@ -124,7 +128,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   loadGatePlot() {
     const currentGate = this.gateService.getCurrentGate();
     this.canvasBackgroundPlotKey = `/expFile/renderGatePlot?plotKey=${
-      currentGate.plotKey
-    }&gateEditSession=${this.gateService.gateEditSession()}&v=${new Date().getTime()}`;
+currentGate.plotKey
+}&gateEditSession=${this.gateService.gateEditSession()}&v=${new Date().getTime()}`;
   }
 }

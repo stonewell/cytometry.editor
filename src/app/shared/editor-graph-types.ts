@@ -176,6 +176,11 @@ export class EditorGraph extends Graph {
   }
 
   onDoubleClick(sender: any, evt: any) {
+    if (this.gateService.isDAFiGating()) {
+      console.log('only rectangle gate for DAFi gating');
+      return;
+    }
+
     const cell = evt.getProperty('cell');
     const me = evt.getProperty('event');
 

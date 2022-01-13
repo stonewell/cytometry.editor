@@ -8,6 +8,7 @@ import {
   TransformType,
   gateFromJSON,
   gateToJSON,
+  GatingMethod,
 } from './gate-types';
 import {
   ExpFile,
@@ -180,7 +181,6 @@ export class GateService {
   getDefaultTransform(channel: string): Transform {
     const t = this.expFile.defaultTransforms
       .filter((t: ExpFileTransform) => {
-        console.log(`${JSON.stringify(t)} t:${t.channel}, ${channel}`);
         return t.channel === channel;
       })
       .map((t: ExpFileTransform) => this.expFileTransformToTransform(t));
@@ -193,7 +193,6 @@ export class GateService {
   getAutoTransform(channel: string): Transform {
     const t = this.expFile.autoTransforms
       .filter((t: ExpFileTransform) => {
-        console.log(`${JSON.stringify(t)} t:${t.channel}, ${channel}`);
         return t.channel === channel;
       })
       .map((t: ExpFileTransform) => this.expFileTransformToTransform(t));
@@ -226,5 +225,9 @@ export class GateService {
 
   expFileId(): string {
     return `${this.expFile.id}`;
+  }
+
+  isDAFiGating(): boolean {
+    return this.rootGate?.gatingMethod === GatingMethod.dafi;
   }
 }
