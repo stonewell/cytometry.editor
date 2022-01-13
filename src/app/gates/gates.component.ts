@@ -91,14 +91,16 @@ export class GatesComponent implements OnInit, OnDestroy {
   onGateResetClicked(): void {
     this.gateLoaded = false;
     const expFileId = this.gateService.expFileId();
+    const gateSession = this.gateService.gateEditSession();
 
-    this.gateService.loadGate(expFileId, '', false);
+    this.gateService.loadGate(expFileId, gateSession, false);
   }
 
   onNewGateClicked(): void {
     this.gateLoaded = false;
     const expFileId = this.gateService.expFileId();
+    const gateSession = this.gateService.gateEditSession();
 
-    this.gateService.loadGate(expFileId, '', true);
+    this.gateService.loadGate(expFileId, gateSession, true);
   }
 }
