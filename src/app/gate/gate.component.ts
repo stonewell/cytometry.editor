@@ -13,6 +13,7 @@ export class GateComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
 
   gateParameters: string[] = [];
+  gateParametersDisplay: string[] = [];
   predefinedTransforms: string[] = [];
 
   xParameter: string;
@@ -35,6 +36,7 @@ export class GateComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.gateService.gateLoaded.subscribe((_) => {
         this.gateParameters = this.gateService.gateParameters;
+        this.gateParametersDisplay = this.gateService.gateParametersDisplay;
         this.predefinedTransforms = this.gateService.predefinedTransforms;
 
         this.onGateUpdated();

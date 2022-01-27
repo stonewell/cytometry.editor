@@ -32,6 +32,7 @@ export class GateService {
   private gateInfo: any;
 
   gateParameters: string[] = [];
+  gateParametersDisplay: string[] = [];
   predefinedTransforms: string[] = [];
 
   private expFile: ExpFile;
@@ -55,6 +56,7 @@ export class GateService {
         this.expFile = expFile;
 
         this.gateParameters = expFile.channels.map((c) => c.shortName);
+        this.gateParametersDisplay = expFile.channels.map((c) => `${c.shortName}(${c.name})`);
 
         if (this.gateParameters.length < 2) {
           this.gateParameters = [...this.gateParameters, ...['FSC-A', 'FSC-H']];

@@ -5,14 +5,14 @@
     <input type="input" [(ngModel)]="gateName" (input)="onNameUpdate()" />
     <span>X axis:</span>
     <select [(ngModel)]="xParameter" (change)="onUIUpdate()">
-      <option *ngFor="let param of gateParameters" [ngValue]="param">
-        {{ param }}
+      <option *ngFor="let param of gateParameters; let i = index" [ngValue]="param">
+        {{ gateParametersDisplay[i] }}
       </option>
     </select>
     <span>Y axis:</span>
     <select [(ngModel)]="yParameter" (change)="onUIUpdate()">
-      <option *ngFor="let param of gateParameters" [ngValue]="param">
-        {{ param }}
+      <option *ngFor="let param of gateParameters; let i = index" [ngValue]="param">
+        {{ gateParametersDisplay[i] }}
       </option>
     </select>
   </div>
